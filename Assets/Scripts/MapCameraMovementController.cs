@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class MapMovementController : MonoBehaviour
+public class MapCameraMovementController : MonoBehaviour
 {
     public float[] horizontalLevelPoints;
     public float smoothFactor;
@@ -13,7 +13,6 @@ public class MapMovementController : MonoBehaviour
     private void Start()
     {
         activeLevel = GameManager.instance.activeLevel;
-        Debug.Log(activeLevel);
         transform.position = new Vector3
             (horizontalLevelPoints[activeLevel],
             transform.position.y,

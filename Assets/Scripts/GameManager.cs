@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public GameLevel[] gameLevelList;
+    
     public int activeLevel;
     
     private void Awake()
