@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MapMovementController : MonoBehaviour
 {
     public float[] horizontalLevelPoints;
-    public int activeLevel;
     public float smoothFactor;
+
+    private int activeLevel;
 
     private void Start()
     {
+        activeLevel = GameManager.instance.activeLevel;
+        Debug.Log(activeLevel);
         transform.position = new Vector3
             (horizontalLevelPoints[activeLevel],
             transform.position.y,
@@ -32,11 +36,6 @@ public class MapMovementController : MonoBehaviour
     {
         if (activeLevel == horizontalLevelPoints.Length - 1) return;
         activeLevel += 1;
-        /*mainCamera.transform.position = new Vector3
-            (horizontalLevelPoints[activeLevel],
-            mainCamera.transform.position.y,
-            mainCamera.transform.position.z
-            );*/
     }
 
     public void GoToPreviowsLevelPoint()
