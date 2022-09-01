@@ -8,23 +8,27 @@ public class MapCameraMovementController : MonoBehaviour
     public float[] horizontalLevelPoints;
     public float smoothFactor;
 
-    private int activeLevel;
+    public GameObject Connie_Map_Pf;
+    public GameObject Ayka_Map_Pf;
+
+    private GameManager gameManager;
 
     private void Start()
     {
-        activeLevel = GameManager.instance.activeLevel;
+        gameManager = GameManager.instance;
         transform.position = new Vector3
-            (horizontalLevelPoints[activeLevel],
+            (horizontalLevelPoints[gameManager.activeLevel],
             transform.position.y,
             transform.position.z
             );
+        Invoke(nameof(SpawnAykaAndConnie), 1f);
     }
 
     private void FixedUpdate()
     {
         transform.position = Vector3.Lerp(
             transform.position, new Vector3(
-                horizontalLevelPoints[activeLevel],
+                horizontalLevelPoints[gameManager.activeLevel],
                 transform.position.y, 
                 transform.position.z),
             smoothFactor * Time.fixedDeltaTime
@@ -33,13 +37,19 @@ public class MapCameraMovementController : MonoBehaviour
 
     public void GoToNextLevelPoint()
     {
-        if (activeLevel == horizontalLevelPoints.Length - 1) return;
-        activeLevel += 1;
+        if (gameManager.activeLevel == horizontalLevelPoints.Length - 1) return;
+        gameManager.activeLevel += 1;
     }
 
     public void GoToPreviowsLevelPoint()
     {
-        if (activeLevel == 0) return;
-        activeLevel -= 1;
+        if (gameManager.activeLevel == 0) return;
+        gameManager.activeLevel -= 1;
+    }
+
+    void SpawnAykaAndConnie()
+    {
+        Instantiate(Ayka_Map_Pf, new Vector2(transform.position.x - 1.3f - 3f, 0f), Quaternion.identity);
+        Instantiate(Connie_Map_Pf, new Vector2(transform.position.x - 2.6f - 3f, 0f), Quaternion.identity);
     }
 }
