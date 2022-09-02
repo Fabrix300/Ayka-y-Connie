@@ -14,10 +14,17 @@ public class MapLevelInfoLoader : MonoBehaviour
     private void Start()
     {
         GameLevel gL = GameManager.instance.gameLevelList[levelNumber];
-        levelName.text = gL.levelName;
-        levelTitle.text = gL.levelTitle;
-        carrotsText.text = gL.carrotsLeft+"/"+gL.totalCarrots;
-        if (gL.unlocked) lockPanel.SetActive(false);
-        else lockPanel.SetActive(true);
+        if (gL.unlocked)
+        {
+            lockPanel.SetActive(false);
+            levelName.text = gL.levelName;
+            levelTitle.text = gL.levelTitle;
+            carrotsText.text = gL.carrotsLeft + "/" + gL.totalCarrots;
+        }
+        else
+        {
+            lockPanel.SetActive(true);
+            levelName.transform.parent.gameObject.SetActive(false);
+        }
     }
 }
