@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public bool isFirstTimePlaying;
-    public int activeLevel;
-    public int carrotsPerLevel;
+    [HideInInspector] public bool isFirstTimePlaying = false;
+    [HideInInspector] public int activeLevel = 0;
+    [HideInInspector] public int carrotsPerLevel = 8;
+    [HideInInspector] public float transitionsTime = 1f;
+    [HideInInspector] public GameObject loadingScreenGameObject;
 
     public GameLevel[] gameLevelList;
-    public float transitionsTime;
+    
 
     private void Awake()
     {
@@ -24,14 +28,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (isFirstTimePlaying)
-        {
-            LoadSceneByName("level0");
-        }
-        else
-        {
-            LoadSceneByName("GameMap");
-        }
+        if (isFirstTimePlaying) LoadSceneByName("Level0");
+        else LoadSceneByName("GameMap");
     }
 
     void FeedGameLevelList()
@@ -46,18 +44,36 @@ public class GameManager : MonoBehaviour
 
     public void LoadSceneByName(string sceneName)
     {
-        StartCoroutine(LoadScene(sceneName));
+        StartCoroutine(LoadSceneByNameAsynchronously(sceneName));
     }
 
-    IEnumerator LoadScene(string sceneName)
+    IEnumerator LoadSceneByNameAsynchronously(string sceneName)
     {
         GameObject levelLoader = GameObject.Find("LevelLoader");
-        if (levelLoader)
-        {
-            levelLoader.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start");
-        }
+        if (levelLoader) { levelLoader.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start"); } //loadingScreen = levelLoader.transform.Find("LoadingScreen").gameObject;
         yield return new WaitForSeconds(transitionsTime);
-        SceneManager.LoadSceneAsync(sceneName);
+        if (loadingScreenGameObject) loadingScreenGameObject.SetActive(true);
+
+        Slider progressBar = loadingScreenGameObject.transform.Find("ProgressBar").GetComponent<Slider>();
+        TMP_Text progressText = loadingScreenGameObject.transform.Find("ProgressText").GetComponent<TMP_Text>();
+
+        AsyncOperation loadingOperation =  SceneManager.LoadSceneAsync(sceneName);
+
+        while (!loadingOperation.isDone)
+        {
+            float progress = Mathf.Clamp01(loadingOperation.progress / .9f);
+            progressBar.value = progress;
+            progressText.text = progress * 100f + "%";
+            yield return null;
+        }
     }
 
+    public void LoadActiveLevel()
+    {
+        if (gameLevelList[activeLevel].unlocked)
+        {
+            StartCoroutine(LoadSceneByNameAsynchronously("Level" + activeLevel));
+        }
+        
+    }
 }

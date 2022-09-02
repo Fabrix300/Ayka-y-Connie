@@ -52,4 +52,9 @@ public class MapCameraMovementController : MonoBehaviour
         Instantiate(Ayka_Map_Pf, new Vector2(transform.position.x - 1.3f - 3f, 0f), Quaternion.identity);
         Instantiate(Connie_Map_Pf, new Vector2(transform.position.x - 2.6f - 3f, 0f), Quaternion.identity);
     }
+
+    public void LoadActiveLevel()
+    {
+        gameManager.LoadActiveLevel();
+    }
 }
