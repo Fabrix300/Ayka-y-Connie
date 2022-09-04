@@ -21,7 +21,7 @@ public class MapCameraMovementController : MonoBehaviour
             transform.position.y,
             transform.position.z
             );
-        Invoke(nameof(SpawnAykaAndConnie), 1f);
+        Invoke(nameof(SpawnAykaAndConnie), 0.8f);
     }
 
     private void FixedUpdate()
@@ -49,8 +49,11 @@ public class MapCameraMovementController : MonoBehaviour
 
     void SpawnAykaAndConnie()
     {
-        Instantiate(Ayka_Map_Pf, new Vector2(transform.position.x - 1.3f - 3f, 0f), Quaternion.identity);
-        Instantiate(Connie_Map_Pf, new Vector2(transform.position.x - 2.6f - 3f, 0f), Quaternion.identity);
+        float cameraXLimit = GetComponent<Camera>().ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
+        //Instantiate(Ayka_Map_Pf, new Vector2(transform.position.x - 1.3f - 3f, 0f), Quaternion.identity);
+        //Instantiate(Connie_Map_Pf, new Vector2(transform.position.x - 2.6f - 3f, 0f), Quaternion.identity);
+        Instantiate(Ayka_Map_Pf, new Vector2(transform.position.x - cameraXLimit, 0f), Quaternion.identity);
+        Instantiate(Connie_Map_Pf, new Vector2(transform.position.x - cameraXLimit - 1.3f, 0f), Quaternion.identity);
     }
 
     public void LoadActiveLevel()
