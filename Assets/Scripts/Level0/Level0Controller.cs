@@ -40,6 +40,7 @@ public class Level0Controller : MonoBehaviour
     private bool continueDialogue = false;
     private int index = 0;
     private IEnumerator typeSentenceCoroutine;
+    private bool isTypeSentenceCoroutineRunning;
     private int aykaDirX = 0;
     private int connieDirX = 0;
 
@@ -62,33 +63,97 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator Level0Actions()
     {
+        lvlCarrotCounter.gameObject.SetActive(false);
         yield return new WaitForSeconds(1.5f);
+        /* STARTING AYKA MONOLOGUE */
         DisplayCompleteDialogueUI();   continueDialogue = false;
         DisplayDialogueSentence(aykaMonologue, index);
         while (!continueDialogue) yield return null;
-        StopCoroutine(typeSentenceCoroutine);
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = aykaMonologue.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
         index++;   continueDialogue = false;
         DisplayDialogueSentence(aykaMonologue, index);
         while (!continueDialogue) yield return null;
-        StopCoroutine(typeSentenceCoroutine);
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = aykaMonologue.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
         continueDialogue = false;   index = 0;
         HideCompleteDialogueUI();
         // CONNIE APPEARS
         yield return new WaitForSeconds(.8f);
-        connieDirX = -1; 
+        connieDirX = -1;
         while (connieTransform.position.x > 2f) yield return null;
         connieDirX = 0;
-        /* STARTING CONNIEDIALOGUE1 */
+        /* STARTING CONNIE DIALOGUE 1 */
         DisplayCompleteDialogueUI(); continueDialogue = false;
         DisplayDialogueSentence(connieDialogue1, index);
         while (!continueDialogue) yield return null;
-        StopCoroutine(typeSentenceCoroutine);
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = connieDialogue1.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
         index++; continueDialogue = false;
         DisplayDialogueSentence(connieDialogue1, index);
         while (!continueDialogue) yield return null;
-        StopCoroutine(typeSentenceCoroutine);
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = connieDialogue1.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
         continueDialogue = false; index = 0;
+        /* FINISHING CONNIE DIALOGUE 1 */
+        /* STARTING AYKA DIALOGUE 1 */
+        DisplayDialogueSentence(aykaDialogue1, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = aykaDialogue1.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        index++; continueDialogue = false;
+        DisplayDialogueSentence(aykaDialogue1, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = aykaDialogue1.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index = 0;
+        /* FINISHING AYKA DIALOGUE 1 */
+        /* STARTING CONNIE DIALOGUE 2 */
+        DisplayDialogueSentence(connieDialogue2, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = connieDialogue2.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        index++; continueDialogue = false;
+        DisplayDialogueSentence(connieDialogue2, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = connieDialogue2.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index = 0;
+        /* FINISHING CONNIE DIALOGUE 2 */
         HideCompleteDialogueUI();
+        yield return new WaitForSeconds(0.8f); lvlCarrotCounter.gameObject.SetActive(true);
     }
 
     void DisplayDialogueSentence(Dialogue dialogue, int index)
@@ -97,7 +162,7 @@ public class Level0Controller : MonoBehaviour
         dialogueBoxCharacterName.text = dialogue.characterName;
         //dialogueBoxSentenceBox.text = dialogue.sentences[index];
         typeSentenceCoroutine = TypeSentence(
-            dialogue.sentences[index], 
+            dialogue.sentences[index],
             dialogueTimeBetweenLetters, 
             dialogue.characterName
             );
@@ -106,6 +171,7 @@ public class Level0Controller : MonoBehaviour
 
     IEnumerator TypeSentence(string sentence, float timeBetweenLetters, string characterName)
     {
+        isTypeSentenceCoroutineRunning = true;
         dialogueBoxSentenceBox.text = "";
         int letterCount = 0;
         char[] sentenceCharArray = sentence.ToCharArray();
@@ -137,6 +203,7 @@ public class Level0Controller : MonoBehaviour
                 letterCount++;
             }
         }
+        isTypeSentenceCoroutineRunning = false;
     }
 
     void AykaUpdateAnimation()
@@ -171,18 +238,14 @@ public class Level0Controller : MonoBehaviour
         continueDialogueButtonAnimator.SetInteger("state", 2);
     }
 
-    public void OnContinueDialogue()
-    {
-        continueDialogue = true;
-    }
+    public void OnContinueDialogue() { continueDialogue = true; }
 
-    void MoveConnieToLimitOfCamera()
-    {
-        connieTransform.position = new Vector2((Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, connieRb2d.gameObject.transform.position.y);
-    }
+    void MoveConnieToLimitOfCamera() { connieTransform.position = new Vector2((Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, connieRb2d.gameObject.transform.position.y); }
 
     private Dialogue aykaMonologue;
     private Dialogue connieDialogue1;
+    private Dialogue aykaDialogue1;
+    private Dialogue connieDialogue2;
 
     void FeedDialoguesArrays()
     {
@@ -190,5 +253,9 @@ public class Level0Controller : MonoBehaviour
             "¡Que bonito día!", "Espero nadie me moleste..." });
         connieDialogue1 = new Dialogue("Connie", connieSpriteImage, new string[2]{
             "AAAAAAAAAAAA", "¡Señor zorro por favor ayúdeme!" });
+        aykaDialogue1 = new Dialogue("Ayka", aykaSpriteImage, new string[2]{
+            "¿Qué pasa coneja?", "A qué vienen esas prisas..." });
+        connieDialogue2 = new Dialogue("Connie", connieSpriteImage, new string[2]{
+            "Estaba recolectando zanahorias y...", "¡Los animales malvados me las quieren robar!" });
     }
 }

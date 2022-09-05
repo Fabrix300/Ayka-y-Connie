@@ -70,10 +70,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadActiveLevel()
     {
-        if (gameLevelList[activeLevel].unlocked)
-        {
-            StartCoroutine(LoadSceneByNameAsynchronously("Level" + activeLevel));
-        }
-        
+        //if (gameLevelList[activeLevel].unlocked) StartCoroutine(LoadSceneByNameAsynchronously("Level" + activeLevel));
+        StartCoroutine(LoadSceneByNameAsynchronously("Level" + activeLevel));
     }
 }

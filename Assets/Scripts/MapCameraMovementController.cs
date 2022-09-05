@@ -61,10 +61,10 @@ public class MapCameraMovementController : MonoBehaviour
 
     public void LoadActiveLevel()
     {
-        foreach (Button b in mapMovementButtons)
+        if (gameManager.gameLevelList[gameManager.activeLevel].unlocked)
         {
-            b.interactable = false;
-        }
-        gameManager.LoadActiveLevel();
+            foreach (Button b in mapMovementButtons) b.interactable = false;
+            gameManager.LoadActiveLevel();
+        }        
     }
 }

@@ -8,7 +8,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
-    float musicVolume = 0.6f;
+    float musicVolume = 0.5f;
     float sfxVolume = 0.7f;
 
     public Sound[] songs;
@@ -129,6 +129,10 @@ public class AudioManager : MonoBehaviour
     {
         sfxVolume = _sfxVolume;
         foreach (Sound s in soundEffects)
+        {
+            if (s.source) s.source.volume = sfxVolume;
+        }
+        foreach (Sound s in characterVoices)
         {
             if (s.source) s.source.volume = sfxVolume;
         }
