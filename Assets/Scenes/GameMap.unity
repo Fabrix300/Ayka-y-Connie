@@ -1593,6 +1593,10 @@ MonoBehaviour:
   smoothFactor: 8
   Connie_Map_Pf: {fileID: 7376884033410301707, guid: bf77eb4a1a7a2e4468ed98bec5f8be06, type: 3}
   Ayka_Map_Pf: {fileID: 2978686825736169231, guid: 986c2b7c397d6c64291259e2627a4705, type: 3}
+  mapMovementButtons:
+  - {fileID: 132597620}
+  - {fileID: 1016903071}
+  - {fileID: 1098827019}
 --- !u!1 &444101458
 GameObject:
   m_ObjectHideFlags: 0

@@ -30,6 +30,7 @@ public class Level0Controller : MonoBehaviour
     public TMP_Text dialogueBoxSentenceBox;
 
     [Header("General Level Properties")]
+    public LevelCarrotCounter lvlCarrotCounter;
     [Range(1,5)] public int dialogueSoundFrequencyLevel;
     public float dialogueTimeBetweenLetters;
     [Range(-3, 3)] public float dialogueMinPitch;

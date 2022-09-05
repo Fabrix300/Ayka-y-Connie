@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using UnityEngine.UI;
 
 public class MapCameraMovementController : MonoBehaviour
 {
@@ -10,6 +10,8 @@ public class MapCameraMovementController : MonoBehaviour
 
     public GameObject Connie_Map_Pf;
     public GameObject Ayka_Map_Pf;
+
+    public Button[] mapMovementButtons;
 
     private GameManager gameManager;
 
@@ -59,6 +61,10 @@ public class MapCameraMovementController : MonoBehaviour
 
     public void LoadActiveLevel()
     {
+        foreach (Button b in mapMovementButtons)
+        {
+            b.interactable = false;
+        }
         gameManager.LoadActiveLevel();
     }
 }
