@@ -9,25 +9,25 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    [HideInInspector] public bool isFirstTimePlaying = false;
-    [HideInInspector] public int activeLevel = 0;
-    [HideInInspector] public int carrotsPerLevel = 8;
-    [HideInInspector] public float transitionsTime = 1f;
-    [HideInInspector] public GameObject loadingScreenGameObject;
+    public bool isFirstTimePlaying;
+    public int activeLevel;
+    public int carrotsPerLevel;
+    private float transitionsTime = 1f;
+    public GameObject loadingScreenGameObject;
 
     public GameLevel[] gameLevelList;
-    
 
     private void Awake()
     {
         if (instance != null) { Destroy(gameObject); return; }
         instance = this;
         DontDestroyOnLoad(gameObject);
-        FeedGameLevelList();
+        //FeedGameLevelList();
     }
 
     private void Start()
     {
+        FeedGameLevelList();
         if (isFirstTimePlaying) LoadSceneByName("Level0");
         else LoadSceneByName("GameMap");
     }

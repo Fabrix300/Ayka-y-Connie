@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 84964941}
   - component: {fileID: 84964940}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: CarrotCounterText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -489,7 +489,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &176175005
 GameObject:
@@ -1488,6 +1488,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   configMenuOverlayAnim: {fileID: 1813074144}
   configMenuPanelAnim: {fileID: 799665008}
+  musicVolumeSlider: {fileID: 506996603}
+  sfxVolumeSlider: {fileID: 813482317}
 --- !u!1 &398344732
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,7 +1573,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &398344736
 MonoBehaviour:
@@ -1638,6 +1640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 447330676}
+  - component: {fileID: 447330677}
   m_Layer: 5
   m_Name: Carrot Counter
   m_TagString: Untagged
@@ -1668,6 +1671,19 @@ RectTransform:
   m_AnchoredPosition: {x: -280, y: -110}
   m_SizeDelta: {x: 480, y: 167}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &447330677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447330675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e80a2987f61390b4e8cb8cff92ddf327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carrotCounterText: {fileID: 1465995537}
 --- !u!1 &448848184
 GameObject:
   m_ObjectHideFlags: 0
@@ -1994,7 +2010,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -2031,7 +2047,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 391213262}
+        m_TargetAssemblyTypeName: ConfigurationMenuController, Assembly-CSharp
+        m_MethodName: SetMusicVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &606279318
 GameObject:
   m_ObjectHideFlags: 0
@@ -6274,7 +6302,7 @@ RectTransform:
   - {fileID: 656352268}
   - {fileID: 391213261}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6598,7 +6626,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -6635,7 +6663,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 391213262}
+        m_TargetAssemblyTypeName: ConfigurationMenuController, Assembly-CSharp
+        m_MethodName: SetSfxVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &833300471
 GameObject:
   m_ObjectHideFlags: 0
@@ -6808,7 +6848,7 @@ Transform:
   m_Children:
   - {fileID: 659822857}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &894207856
 GameObject:
@@ -7118,55 +7158,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982919878}
   m_CullTransparentMesh: 1
---- !u!1 &992599874
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 992599876}
-  - component: {fileID: 992599875}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &992599875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 992599874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d76e251b020bb754a990646d63f2428a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFirstTimePlaying: 0
-  activeLevel: 0
-  carrotsPerLevel: 8
-  transitionsTime: 1
-  loadingScreenGameObject: {fileID: 0}
---- !u!4 &992599876
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 992599874}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.058814567, y: 0.23115492, z: 0.004500015}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1016903069
 GameObject:
   m_ObjectHideFlags: 0
@@ -7463,7 +7454,7 @@ Transform:
   m_Children:
   - {fileID: 476572310}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1149757064
 GameObject:
@@ -8380,7 +8371,7 @@ Transform:
   - {fileID: 1456099615}
   - {fileID: 25456357}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1456099614
 GameObject:
@@ -9620,7 +9611,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2427983932902006242, guid: deb711f593091fa4f8f1cc190de70fa3, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2427983932902006242, guid: deb711f593091fa4f8f1cc190de70fa3, type: 3}
       propertyPath: m_LocalPosition.x

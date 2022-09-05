@@ -6,22 +6,34 @@ using TMPro;
 
 public class Level0Controller : MonoBehaviour
 {
+    [Header("Ayka Properties")]
     public Sprite aykaSpriteImage;
-    public Sprite connieSpriteImage;
     public Rigidbody2D aykaRb2d;
     public Transform aykaTransform;
     public Animator aykaAnimator;
+    public float aykaMovementSpeed;
+    public AudioSource aykaVoice;
+
+    [Header("Connie Properties")]
+    public Sprite connieSpriteImage;
     public Rigidbody2D connieRb2d;
     public Transform connieTransform;
     public Animator connieAnimator;
-    public float aykaMovementSpeed;
     public float connieMovementSpeed;
+    public AudioSource connieVoice;
 
+    [Header("Dialogue Box Properties")]
     public Animator dialogueBoxAnimator;
     public Animator continueDialogueButtonAnimator;
     public Image dialogueBoxCharacterImage;
     public TMP_Text dialogueBoxCharacterName;
     public TMP_Text dialogueBoxSentenceBox;
+
+    [Header("General Level Properties")]
+    [Range(1,5)] public int dialogueSoundFrequencyLevel;
+    public float dialogueTimeBetweenLetters;
+    [Range(-3, 3)] public float dialogueMinPitch;
+    [Range(-3, 3)] public float dialogueMaxPitch;
 
     //private bool inDialogue = false;
     private bool continueDialogue = false;
@@ -34,6 +46,8 @@ public class Level0Controller : MonoBehaviour
     {
         FeedDialoguesArrays();
         MoveConnieToLimitOfCamera();
+        aykaVoice = AudioManager.instance.characterVoices[0].source;
+        connieVoice = AudioManager.instance.characterVoices[1].source;
         StartCoroutine(Level0Actions());
     }
 
@@ -60,7 +74,7 @@ public class Level0Controller : MonoBehaviour
         HideCompleteDialogueUI();
         // CONNIE APPEARS
         yield return new WaitForSeconds(.8f);
-        connieDirX = -1;
+        connieDirX = -1; 
         while (connieTransform.position.x > 2f) yield return null;
         connieDirX = 0;
         /* STARTING CONNIEDIALOGUE1 */
@@ -81,63 +95,64 @@ public class Level0Controller : MonoBehaviour
         dialogueBoxCharacterImage.sprite = dialogue.characterImage;
         dialogueBoxCharacterName.text = dialogue.characterName;
         //dialogueBoxSentenceBox.text = dialogue.sentences[index];
-        typeSentenceCoroutine = TypeSentence(dialogue.sentences[index], 0.05f);
+        typeSentenceCoroutine = TypeSentence(
+            dialogue.sentences[index], 
+            dialogueTimeBetweenLetters, 
+            dialogue.characterName
+            );
         StartCoroutine(typeSentenceCoroutine);
     }
 
-    IEnumerator TypeSentence(string sentence, float timeBetweenLetters)
+    IEnumerator TypeSentence(string sentence, float timeBetweenLetters, string characterName)
     {
         dialogueBoxSentenceBox.text = "";
-        foreach (char letter in sentence.ToCharArray())
+        int letterCount = 0;
+        char[] sentenceCharArray = sentence.ToCharArray();
+        if (characterName == "Ayka")
         {
-            dialogueBoxSentenceBox.text += letter;
-            yield return new WaitForSeconds(timeBetweenLetters);
+            foreach (char letter in sentenceCharArray)
+            {
+                aykaVoice.pitch = Random.Range(dialogueMinPitch, dialogueMaxPitch);
+                if (letterCount % dialogueSoundFrequencyLevel == 0)
+                {
+                    aykaVoice.Play();
+                }
+                dialogueBoxSentenceBox.text += letter;
+                yield return new WaitForSeconds(timeBetweenLetters);
+                letterCount++;
+            }
+        }
+        else if (characterName == "Connie")
+        {
+            foreach (char letter in sentenceCharArray)
+            {
+                connieVoice.pitch = Random.Range(dialogueMinPitch, dialogueMaxPitch);
+                if (letterCount % dialogueSoundFrequencyLevel == 0)
+                {
+                    connieVoice.Play();
+                }
+                dialogueBoxSentenceBox.text += letter;
+                yield return new WaitForSeconds(timeBetweenLetters);
+                letterCount++;
+            }
         }
     }
 
     void AykaUpdateAnimation()
     {
         int state;
-        if (aykaDirX > 0f)
-        {
-            //sR.flipX = false;
-            aykaTransform.rotation = Quaternion.Euler(0, 0, 0);
-            state = 1;
-        }
-        else if (aykaDirX < 0f)
-        {
-            //sR.flipX = true;
-            aykaTransform.rotation = Quaternion.Euler(0, 180, 0);
-            state = 1;
-        }
-        else
-        {
-            //sR.flipX = false;
-            state = 0;
-        }
+        if (aykaDirX > 0f) { aykaTransform.rotation = Quaternion.Euler(0, 0, 0); state = 1; }
+        else if (aykaDirX < 0f) { aykaTransform.rotation = Quaternion.Euler(0, 180, 0); state = 1; }
+        else state = 0;
         aykaAnimator.SetInteger("state", state);
     }
 
     void ConnieUpdateAnimation()
     {
         int state;
-        if (connieDirX > 0f)
-        {
-            //sR.flipX = false;
-            connieTransform.rotation = Quaternion.Euler(0, 0, 0);
-            state = 1;
-        }
-        else if (connieDirX < 0f)
-        {
-            //sR.flipX = true;
-            connieTransform.rotation = Quaternion.Euler(0, 180, 0);
-            state = 1;
-        }
-        else
-        {
-            //sR.flipX = false;
-            state = 0;
-        }
+        if (connieDirX > 0f) { connieTransform.rotation = Quaternion.Euler(0, 0, 0); state = 1; }
+        else if (connieDirX < 0f) { connieTransform.rotation = Quaternion.Euler(0, 180, 0); state = 1; }
+        else state = 0;
         connieAnimator.SetInteger("state", state);
     }
 
@@ -171,7 +186,7 @@ public class Level0Controller : MonoBehaviour
     void FeedDialoguesArrays()
     {
         aykaMonologue = new Dialogue("Ayka", aykaSpriteImage, new string[2]{
-            "¡Hola querido jugador!", "¿Cómo estás?..." });
+            "¡Que bonito día!", "Espero nadie me moleste..." });
         connieDialogue1 = new Dialogue("Connie", connieSpriteImage, new string[2]{
             "AAAAAAAAAAAA", "¡Señor zorro por favor ayúdeme!" });
     }

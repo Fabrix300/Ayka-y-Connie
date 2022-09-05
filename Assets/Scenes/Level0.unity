@@ -321,6 +321,7 @@ GameObject:
   - component: {fileID: 637433651}
   - component: {fileID: 637433650}
   - component: {fileID: 637433649}
+  - component: {fileID: 637433654}
   m_Layer: 0
   m_Name: Ayka
   m_TagString: Untagged
@@ -462,6 +463,102 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &637433654
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637433648}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &663824035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,21 +1386,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a5175fba97e7b846a645424f5c93d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aykaSpriteImage: {fileID: 21300000, guid: b48e9feab2c7e0646afecdf27e59b836, type: 3}
-  connieSpriteImage: {fileID: 21300000, guid: b48e9feab2c7e0646afecdf27e59b836, type: 3}
+  aykaSpriteImage: {fileID: 21300000, guid: 8f46b08ed925a3545bf843a63dd593e9, type: 3}
   aykaRb2d: {fileID: 637433651}
   aykaTransform: {fileID: 637433653}
   aykaAnimator: {fileID: 637433649}
+  aykaMovementSpeed: 200
+  aykaVoice: {fileID: 0}
+  connieSpriteImage: {fileID: 21300000, guid: b48e9feab2c7e0646afecdf27e59b836, type: 3}
   connieRb2d: {fileID: 765244353}
   connieTransform: {fileID: 765244350}
   connieAnimator: {fileID: 765244351}
-  aykaMovementSpeed: 200
   connieMovementSpeed: 200
+  connieVoice: {fileID: 0}
   dialogueBoxAnimator: {fileID: 1087727873}
   continueDialogueButtonAnimator: {fileID: 1444821764}
   dialogueBoxCharacterImage: {fileID: 1269492436}
   dialogueBoxCharacterName: {fileID: 1955677383}
   dialogueBoxSentenceBox: {fileID: 2069742724}
+  dialogueSoundFrequencyLevel: 2
+  dialogueTimeBetweenLetters: 0.05
+  dialogueMinPitch: 0.8
+  dialogueMaxPitch: 1.2
 --- !u!4 &1123778526
 Transform:
   m_ObjectHideFlags: 0

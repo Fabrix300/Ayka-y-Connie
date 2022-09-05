@@ -19,7 +19,8 @@ public class MapLevelInfoLoader : MonoBehaviour
             lockPanel.SetActive(false);
             levelName.text = gL.levelName;
             levelTitle.text = gL.levelTitle;
-            carrotsText.text = gL.hasBeenPlayed? gL.carrotsLeft + "/" + gL.totalCarrots : "-/" + gL.totalCarrots;
+            if (gL.hasBeenPlayed) carrotsText.text = gL.carrotsLeft + "/" + gL.totalCarrots;
+            else carrotsText.text = "-/" + gL.totalCarrots;
         }
         else
         {
