@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6612828860351142934}
   - component: {fileID: 6612828860351142935}
   - component: {fileID: 6612828860351143016}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Connie
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -23,8 +23,12 @@ public class Level0Controller : MonoBehaviour
     public AudioSource connieVoice;
 
     [Header("Extra Characters GameObjects")]
-    public GameObject opossumPreFab;
-    private GameObject opossumGO;
+    public Sprite opossumSpriteImage;
+    public Rigidbody2D opossumRb2d;
+    public Transform opossumTransform;
+    public Animator opossumAnimator;
+    public float opossumMovementSpeed;
+    public AudioSource opossumVoice;
 
     [Header("Dialogue Box Properties")]
     public Animator dialogueBoxAnimator;
@@ -42,19 +46,23 @@ public class Level0Controller : MonoBehaviour
     [Range(-3, 3)] public float dialogueMaxPitch;
 
     //private bool inDialogue = false;
+    private Camera mainCamera;
     private bool continueDialogue = false;
     private int index = 0;
     private IEnumerator typeSentenceCoroutine;
     private bool isTypeSentenceCoroutineRunning;
     private int aykaDirX = 0;
     private int connieDirX = 0;
+    private int opossumDirX = 0;
 
     private void Start()
     {
+        mainCamera = Camera.main;
         FeedDialoguesArrays();
-        MoveConnieToLimitOfCamera();
+        MoveCharactersToLimitOfCamera();
         aykaVoice = AudioManager.instance.characterVoices[0].source;
         connieVoice = AudioManager.instance.characterVoices[1].source;
+        opossumVoice = AudioManager.instance.characterVoices[2].source;
         StartCoroutine(Level0Actions());
     }
 
@@ -64,6 +72,8 @@ public class Level0Controller : MonoBehaviour
         AykaUpdateAnimation();
         connieRb2d.velocity = new Vector2(connieDirX * connieMovementSpeed * Time.fixedDeltaTime, connieRb2d.velocity.y);
         ConnieUpdateAnimation();
+        opossumRb2d.velocity = new Vector2(opossumDirX * connieMovementSpeed * Time.deltaTime, opossumRb2d.velocity.y);
+        OpossumUpdateAnimation();
     }
 
     public IEnumerator Level0Actions()
@@ -95,8 +105,9 @@ public class Level0Controller : MonoBehaviour
         // CONNIE APPEARS
         yield return new WaitForSeconds(.8f);
         connieDirX = -1;
-        while (connieTransform.position.x > 2f) yield return null;
+        while (connieTransform.position.x > 1.2f) yield return null;
         connieDirX = 0;
+        connieRb2d.AddForce(Vector2.up * 200);
         /* STARTING CONNIE DIALOGUE 1 */
         DisplayCompleteDialogueUI(); continueDialogue = false;
         DisplayDialogueSentence(connieDialogue1, index);
@@ -166,13 +177,67 @@ public class Level0Controller : MonoBehaviour
             while (!continueDialogue) yield return null;
         }
         index = 0; continueDialogue = false;
+        HideCompleteDialogueUI();
         /* FINISHING CONNIE DIALOGUE 2 */
-        /* INSTANTIATE OPOSSUM AND SCARE CONNIE THEN CONNIE GOES BEHIND AYKA AND CAMERA MOVES TO CENTER BOTH */
-        opossumGO = Instantiate(
-            opossumPreFab,
-            new Vector3((Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, 0f, 0f),
-            Quaternion.identity
-            );
+        /* OPOSSUM SCARES CONNIE THEN CONNIE GOES BEHIND AYKA AND CAMERA MOVES TO CENTER BOTH */
+        yield return new WaitForSeconds(.8f);
+        opossumDirX = -1;
+        while (opossumTransform.position.x > 2.8f) yield return null;
+        opossumDirX = 0;
+        yield return new WaitForSeconds(.3f); connieTransform.rotation = Quaternion.Euler(0, 0, 0);
+        yield return new WaitForSeconds(0.5f); connieRb2d.AddForce(Vector2.up * 200);
+        yield return new WaitForSeconds(0.6f);
+        connieDirX = -1;
+        while (connieTransform.position.x > -1.3f) yield return null; connieDirX = 0;
+        connieTransform.rotation = Quaternion.Euler(0, 0, 0);
+        /**/
+        /* OPOSSUM  */
+        DisplayCompleteDialogueUI(); continueDialogue = false;
+        DisplayDialogueSentence(opossumDialogue1, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = opossumDialogue1.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index++;
+        DisplayDialogueSentence(opossumDialogue1, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = opossumDialogue1.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index = 0;
+        DisplayDialogueSentence(connieDialogue3, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = connieDialogue3.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index++;
+        DisplayDialogueSentence(connieDialogue3, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = connieDialogue3.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index = 0;
+        DisplayDialogueSentence(aykaDialogue2, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = aykaDialogue2.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index = 0;
         /**/
         HideCompleteDialogueUI();
         yield return new WaitForSeconds(0.8f); lvlCarrotCounter.gameObject.SetActive(true); lvlPauseButton.gameObject.SetActive(true);
@@ -202,10 +267,7 @@ public class Level0Controller : MonoBehaviour
             foreach (char letter in sentenceCharArray)
             {
                 aykaVoice.pitch = Random.Range(dialogueMinPitch, dialogueMaxPitch);
-                if (letterCount % dialogueSoundFrequencyLevel == 0)
-                {
-                    aykaVoice.Play();
-                }
+                if (letterCount % dialogueSoundFrequencyLevel == 0) aykaVoice.Play();
                 dialogueBoxSentenceBox.text += letter;
                 yield return new WaitForSeconds(timeBetweenLetters);
                 letterCount++;
@@ -216,10 +278,18 @@ public class Level0Controller : MonoBehaviour
             foreach (char letter in sentenceCharArray)
             {
                 connieVoice.pitch = Random.Range(dialogueMinPitch, dialogueMaxPitch);
-                if (letterCount % dialogueSoundFrequencyLevel == 0)
-                {
-                    connieVoice.Play();
-                }
+                if (letterCount % dialogueSoundFrequencyLevel == 0) connieVoice.Play();
+                dialogueBoxSentenceBox.text += letter;
+                yield return new WaitForSeconds(timeBetweenLetters);
+                letterCount++;
+            }
+        }
+        else if (characterName == "Zarigüeya")
+        {
+            foreach (char letter in sentenceCharArray)
+            {
+                opossumVoice.pitch = Random.Range(dialogueMinPitch, dialogueMaxPitch);
+                if (letterCount % dialogueSoundFrequencyLevel == 0) opossumVoice.Play();
                 dialogueBoxSentenceBox.text += letter;
                 yield return new WaitForSeconds(timeBetweenLetters);
                 letterCount++;
@@ -246,6 +316,15 @@ public class Level0Controller : MonoBehaviour
         connieAnimator.SetInteger("state", state);
     }
 
+    void OpossumUpdateAnimation()
+    {
+        int state;
+        if (opossumDirX > 0f) { connieTransform.rotation = Quaternion.Euler(0, 0, 0); state = 1; }
+        else if (opossumDirX < 0f) { connieTransform.rotation = Quaternion.Euler(0, 180, 0); state = 1; }
+        else state = 0;
+        opossumAnimator.SetInteger("state", state);
+    }
+
     void DisplayCompleteDialogueUI()
     {
         dialogueBoxAnimator.SetInteger("state", 1);
@@ -262,12 +341,19 @@ public class Level0Controller : MonoBehaviour
 
     public void OnContinueDialogue() { continueDialogue = true; }
 
-    void MoveConnieToLimitOfCamera() { connieTransform.position = new Vector2((Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, connieRb2d.gameObject.transform.position.y); }
+    void MoveCharactersToLimitOfCamera() 
+    { 
+        connieTransform.position = new Vector2((mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, connieRb2d.gameObject.transform.position.y);
+        opossumTransform.position = new Vector2((mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 2f, opossumRb2d.gameObject.transform.position.y);
+    }
 
     private Dialogue aykaMonologue;
     private Dialogue connieDialogue1;
     private Dialogue aykaDialogue1;
     private Dialogue connieDialogue2;
+    private Dialogue opossumDialogue1;
+    private Dialogue connieDialogue3;
+    private Dialogue aykaDialogue2;
 
     void FeedDialoguesArrays()
     {
@@ -276,9 +362,14 @@ public class Level0Controller : MonoBehaviour
         connieDialogue1 = new Dialogue("Connie", connieSpriteImage, new string[2]{
             "AAAAAAAAAAAA", "¡Señor zorro por favor ayúdeme!" });
         aykaDialogue1 = new Dialogue("Ayka", aykaSpriteImage, new string[2]{
-            "¿Qué pasa coneja?", "A qué vienen esas prisas..." });
+            "¿Qué pasa coneja?", "¿A qué vienen esas prisas?" });
         connieDialogue2 = new Dialogue("Connie", connieSpriteImage, new string[3]{
             "Estaba recolectando zanahorias y...", "¡Los animales malvados me las quieren robar!",
-            "Tiene que ayudarme señor zorro, por favor :("});
+            "Tiene que ayudarme señor zorro, por favor"});
+        opossumDialogue1 = new Dialogue("Zarigüeya", opossumSpriteImage, new string[2]{
+            "Vamos coneja...", "No hagas esto más difícil" });
+        connieDialogue3 = new Dialogue("Connie", connieSpriteImage, new string[2]{
+            "¡Él es de los malos!", "¿Me ayudará señor zorro?" });
+        aykaDialogue2 = new Dialogue("Ayka", aykaSpriteImage, new string[1]{ "Está bien, te ayudaré esta vez" });
     }
 }

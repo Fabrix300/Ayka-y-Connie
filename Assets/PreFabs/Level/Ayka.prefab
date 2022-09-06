@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2053100840788045405}
   - component: {fileID: 2053100840788045404}
   - component: {fileID: 2053100840788045407}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ayka
   m_TagString: Untagged
   m_Icon: {fileID: 0}

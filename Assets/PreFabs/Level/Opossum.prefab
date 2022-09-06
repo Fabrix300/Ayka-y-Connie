@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2825973377227764031}
   - component: {fileID: 2825973377227764028}
   - component: {fileID: 2825973377227764029}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Opossum
   m_TagString: Untagged
   m_Icon: {fileID: 0}

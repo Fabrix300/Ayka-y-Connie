@@ -197,6 +197,13 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
     source: {fileID: 0}
+  - clip: {fileID: 8300000, guid: 7dae30a86e5f2374a8ec8ca6f3d2b52f, type: 3}
+    name: opossumVoice
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
 --- !u!4 &514573221
 Transform:
   m_ObjectHideFlags: 0
@@ -256,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76e251b020bb754a990646d63f2428a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isFirstTimePlaying: 0
+  isFirstTimePlaying: 1
   activeLevel: 0
   carrotsPerLevel: 8
   loadingScreenGameObject: {fileID: 0}
