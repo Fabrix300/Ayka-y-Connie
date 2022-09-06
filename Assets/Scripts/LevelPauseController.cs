@@ -24,9 +24,9 @@ public class LevelPauseController : MonoBehaviour
 
     public void PauseLevel()
     {
+        gameObject.SetActive(true);
         musicVolumeSlider.value = audioManager.GetMusicVolume();
         sfxVolumeSlider.value = audioManager.GetSfxVolume();
-        gameObject.SetActive(true);
         Time.timeScale = 0f;
         LevelIsPaused = true;
     }

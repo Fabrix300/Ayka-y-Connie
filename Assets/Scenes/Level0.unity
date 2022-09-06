@@ -2141,7 +2141,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 320}
+  m_AnchoredPosition: {x: -0.00048828, y: 320}
   m_SizeDelta: {x: 1000, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1087727871
@@ -2243,12 +2243,14 @@ MonoBehaviour:
   connieAnimator: {fileID: 765244351}
   connieMovementSpeed: 200
   connieVoice: {fileID: 0}
+  opossumPreFab: {fileID: 2825973377227764018, guid: 1940efa9c56f03e4f9f3ca8040a4978d, type: 3}
   dialogueBoxAnimator: {fileID: 1087727873}
   continueDialogueButtonAnimator: {fileID: 1444821764}
   dialogueBoxCharacterImage: {fileID: 1269492436}
   dialogueBoxCharacterName: {fileID: 1955677383}
   dialogueBoxSentenceBox: {fileID: 2069742724}
   lvlCarrotCounter: {fileID: 1328759703}
+  lvlPauseButton: {fileID: 254118573}
   dialogueSoundFrequencyLevel: 2
   dialogueTimeBetweenLetters: 0.04
   dialogueMinPitch: 0.8
