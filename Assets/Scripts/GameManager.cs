@@ -28,8 +28,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         FeedGameLevelList();
-        if (isFirstTimePlaying) LoadSceneByName("Level0");
-        else LoadSceneByName("GameMap");
+        if (isFirstTimePlaying) { LoadSceneByName("Level0"); }
+        else { LoadSceneByName("GameMap"); }
     }
 
     void FeedGameLevelList()
@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
             progressText.text = progress * 100f + "%";
             yield return null;
         }
+        AudioManager.instance.PlaySong(sceneName);
     }
 
     public void LoadActiveLevel()

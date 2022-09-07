@@ -23,7 +23,7 @@ public class MapCameraMovementController : MonoBehaviour
             transform.position.y,
             transform.position.z
             );
-        AudioManager.instance.PlaySong("GameMap");
+        //AudioManager.instance.PlaySong("GameMap");
         Invoke(nameof(SpawnAykaAndConnie), 0.8f);
     }
 

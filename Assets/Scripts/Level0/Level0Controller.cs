@@ -63,7 +63,7 @@ public class Level0Controller : MonoBehaviour
         aykaVoice = AudioManager.instance.characterVoices[0].source;
         connieVoice = AudioManager.instance.characterVoices[1].source;
         opossumVoice = AudioManager.instance.characterVoices[2].source;
-        StartCoroutine(Level0Actions());
+        StartCoroutine(Level01Cinematic());
     }
 
     private void FixedUpdate()
@@ -76,7 +76,7 @@ public class Level0Controller : MonoBehaviour
         OpossumUpdateAnimation();
     }
 
-    public IEnumerator Level0Actions()
+    public IEnumerator Level01Cinematic()
     {
         lvlCarrotCounter.gameObject.SetActive(false);
         lvlPauseButton.gameObject.SetActive(false);
@@ -237,6 +237,33 @@ public class Level0Controller : MonoBehaviour
             dialogueBoxSentenceBox.text = aykaDialogue2.sentences[index];
             while (!continueDialogue) yield return null;
         }
+        continueDialogue = false; index++;
+        DisplayDialogueSentence(aykaDialogue2, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = aykaDialogue2.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index = 0;
+        DisplayDialogueSentence(connieDialogue4, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = connieDialogue4.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
+        continueDialogue = false; index++;
+        DisplayDialogueSentence(connieDialogue4, index);
+        while (!continueDialogue) yield return null;
+        if (isTypeSentenceCoroutineRunning)
+        {
+            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+            dialogueBoxSentenceBox.text = connieDialogue4.sentences[index];
+            while (!continueDialogue) yield return null;
+        }
         continueDialogue = false; index = 0;
         /**/
         HideCompleteDialogueUI();
@@ -354,6 +381,7 @@ public class Level0Controller : MonoBehaviour
     private Dialogue opossumDialogue1;
     private Dialogue connieDialogue3;
     private Dialogue aykaDialogue2;
+    private Dialogue connieDialogue4;
 
     void FeedDialoguesArrays()
     {
@@ -365,11 +393,14 @@ public class Level0Controller : MonoBehaviour
             "¿Qué pasa coneja?", "¿A qué vienen esas prisas?" });
         connieDialogue2 = new Dialogue("Connie", connieSpriteImage, new string[3]{
             "Estaba recolectando zanahorias y...", "¡Los animales malvados me las quieren robar!",
-            "Tiene que ayudarme señor zorro, por favor"});
+            "Tiene que ayudarme por favor"});
         opossumDialogue1 = new Dialogue("Zarigüeya", opossumSpriteImage, new string[2]{
-            "Vamos coneja...", "No hagas esto más difícil" });
+            "Vamos coneja...", "No hagas esto más difícil..." });
         connieDialogue3 = new Dialogue("Connie", connieSpriteImage, new string[2]{
             "¡Él es de los malos!", "¿Me ayudará señor zorro?" });
-        aykaDialogue2 = new Dialogue("Ayka", aykaSpriteImage, new string[1]{ "Está bien, te ayudaré esta vez" });
+        aykaDialogue2 = new Dialogue("Ayka", aykaSpriteImage, new string[2]{ 
+            "Está bien, te ayudaré", "Pero no recuerdo bien los conceptos musicales" });
+        connieDialogue4 = new Dialogue("Connie", connieSpriteImage, new string[2]{
+            "Usted tranquilo, yo nerviosa", "¡Lo ayudaré!" });
     }
 }
