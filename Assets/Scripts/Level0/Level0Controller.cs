@@ -37,6 +37,10 @@ public class Level0Controller : MonoBehaviour
     public TMP_Text dialogueBoxCharacterName;
     public TMP_Text dialogueBoxSentenceBox;
 
+    [Header("Ejercicio")]
+    public GameObject blackOverlay;
+    public GameObject associationExercise;
+
     [Header("General Level Properties")]
     public LevelCarrotCounter lvlCarrotCounter;
     public Button lvlPauseButton;
@@ -268,6 +272,7 @@ public class Level0Controller : MonoBehaviour
         /**/
         HideCompleteDialogueUI();
         yield return new WaitForSeconds(0.8f); lvlCarrotCounter.gameObject.SetActive(true); lvlPauseButton.gameObject.SetActive(true);
+        blackOverlay.SetActive(true); associationExercise.SetActive(true);
     }
 
     void DisplayDialogueSentence(Dialogue dialogue, int index)
