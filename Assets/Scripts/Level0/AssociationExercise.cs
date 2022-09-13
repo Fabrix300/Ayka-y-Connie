@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -19,6 +20,8 @@ public class AssociationExercise : MonoBehaviour
     public Color errorColor;
     public Color defaultColor;
 
+    public event Action OnMistake;
+
     private List<AssociationButton[]> associationTypeButtonsList = new();
     private AssociationButtonGameObject firstButtonSelected = null;
     private AssociationButtonGameObject secondButtonSelected = null;
@@ -36,8 +39,8 @@ public class AssociationExercise : MonoBehaviour
         associationTypeButtonsList.Add(mFNames);
         associationTypeButtonsList.Add(mFValues);
         // Choose randomly 2 arrays from the list to know which ones will be on left and right
-        int firstArray = Random.Range(0, associationTypeButtonsList.Count); int secondArray = firstArray;
-        while (firstArray == secondArray) secondArray = Random.Range(0, associationTypeButtonsList.Count);
+        int firstArray = UnityEngine.Random.Range(0, associationTypeButtonsList.Count); int secondArray = firstArray;
+        while (firstArray == secondArray) secondArray = UnityEngine.Random.Range(0, associationTypeButtonsList.Count);
         // Scramble randomly the elements inside to instantiate the buttons according to that scramble
         int[] firstArrayOrder = Shuffle(new int[]{ 0, 1, 2, 3 });
         int[] secondArrayOrder = Shuffle(new int[]{ 0, 1, 2, 3 });
@@ -94,7 +97,7 @@ public class AssociationExercise : MonoBehaviour
         int[] arrayCopy = array;
         for (int i = 0; i < arrayCopy.Length; i++)
         {
-            int helper = Random.Range(0, arrayCopy.Length);
+            int helper = UnityEngine.Random.Range(0, arrayCopy.Length);
             int temp = arrayCopy[i];
             arrayCopy[i] = arrayCopy[helper];
             arrayCopy[helper] = temp;
@@ -150,12 +153,7 @@ public class AssociationExercise : MonoBehaviour
                     colorBlock.selectedColor = correctColor;
                     colorBlock.highlightedColor = correctColor;
                     secondButtonSelectedButton.colors = colorBlock;
-                    StartCoroutine(FadeToColorAndDisableButton(
-                        firstButtonSelectedButton,
-                        secondButtonSelectedButton,
-                        correctColor,
-                        Color.gray
-                        ));
+                    StartCoroutine(FadeToColorAndDisableButton(firstButtonSelectedButton,secondButtonSelectedButton,correctColor,Color.gray));
                     firstButtonSelected = null;
                     secondButtonSelected = null;
                 }
@@ -173,16 +171,10 @@ public class AssociationExercise : MonoBehaviour
                     colorBlock.selectedColor = errorColor;
                     colorBlock.highlightedColor = errorColor;
                     secondButtonSelectedButton.colors = colorBlock;
-                    /*firstButtonSelectedButton.interactable = false;
-                    secondButtonSelectedButton.interactable = false;*/
-                    StartCoroutine(FadeToColor(
-                        firstButtonSelectedButton,
-                        secondButtonSelectedButton,
-                        errorColor,
-                        defaultColor
-                        ));
+                    StartCoroutine(FadeToColor(firstButtonSelectedButton,secondButtonSelectedButton,errorColor,defaultColor));
                     firstButtonSelected = null;
                     secondButtonSelected = null;
+                    OnMistake?.Invoke();
                 }
             }
         }

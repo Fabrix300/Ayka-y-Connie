@@ -6,6 +6,7 @@ using TMPro;
 public class LevelCarrotCounter : MonoBehaviour
 {
     public TMP_Text levelCarrotCounterText;
+    public GameObject carrotActionCanvas;
 
     private int totalCarrots;
     private int currentCarrots;
@@ -20,5 +21,10 @@ public class LevelCarrotCounter : MonoBehaviour
         levelCarrotCounterText.text = currentCarrots + "/" + totalCarrots;
     }
 
-    // pensar como sera el aumento o disminucion de las zanahorias.
+    public void DiminishOneCarrot(Vector2 positionToInstantiateEffect)
+    {
+        Instantiate(carrotActionCanvas, positionToInstantiateEffect, Quaternion.identity);
+        currentCarrots--;
+        levelCarrotCounterText.text = currentCarrots + "/" + totalCarrots;
+    }
 }
