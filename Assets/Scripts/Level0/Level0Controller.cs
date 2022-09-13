@@ -40,10 +40,14 @@ public class Level0Controller : MonoBehaviour
     [Header("Ejercicio")]
     public GameObject blackOverlay;
     public GameObject associationExercise;
+    public GameObject connieHelperIndicatorOverlay;
+    public GameObject connieHelpIndicatorTutorial;
 
     [Header("General Level Properties")]
+    [HideInInspector] public bool firstTime = true;
     public LevelCarrotCounter lvlCarrotCounter;
     public Button lvlPauseButton;
+    public Button lvlConnieHelperButton;
     [Range(1,5)] public int dialogueSoundFrequencyLevel;
     public float dialogueTimeBetweenLetters;
     [Range(-3, 3)] public float dialogueMinPitch;
@@ -70,6 +74,7 @@ public class Level0Controller : MonoBehaviour
         connieVoice = AudioManager.instance.characterVoices[1].source;
         opossumVoice = AudioManager.instance.characterVoices[2].source;
         associationExercise.GetComponent<AssociationExercise>().OnMistake += StartSecondCinematic;
+        associationExercise.GetComponent<AssociationExercise>().OnWin += StartWinCinematic;
         StartCoroutine(Level01Cinematic());
     }
 
@@ -85,7 +90,9 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator Level01Cinematic()
     {
-        lvlCarrotCounter.gameObject.SetActive(false); lvlPauseButton.gameObject.SetActive(false);
+        blackOverlay.SetActive(false); associationExercise.SetActive(false);
+        connieHelperIndicatorOverlay.SetActive(false); connieHelpIndicatorTutorial.SetActive(false);
+        lvlCarrotCounter.gameObject.SetActive(false); lvlPauseButton.gameObject.SetActive(false); lvlConnieHelperButton.gameObject.SetActive(false);
         yield return new WaitForSeconds(1.5f);
         /* STARTING AYKA MONOLOGUE */
         DisplayCompleteDialogueUI();   continueDialogue = false;
@@ -186,16 +193,12 @@ public class Level0Controller : MonoBehaviour
         HideCompleteDialogueUI();
         /* FINISHING CONNIE DIALOGUE 2 */
         /* OPOSSUM SCARES CONNIE THEN CONNIE GOES BEHIND AYKA AND CAMERA MOVES TO CENTER BOTH */
-        yield return new WaitForSeconds(.8f);
-        opossumDirX = -1;
-        while (opossumTransform.position.x > 2.8f) yield return null;
-        opossumDirX = 0;
+        yield return new WaitForSeconds(.8f); opossumDirX = -1;
+        while (opossumTransform.position.x > 2.8f) { yield return null; } opossumDirX = 0;
         yield return new WaitForSeconds(.3f); connieTransform.rotation = Quaternion.Euler(0, 0, 0);
         yield return new WaitForSeconds(0.5f); connieRb2d.AddForce(Vector2.up * 200);
-        yield return new WaitForSeconds(0.6f);
-        connieDirX = -1;
-        while (connieTransform.position.x > -1.3f) yield return null; connieDirX = 0;
-        connieTransform.rotation = Quaternion.Euler(0, 0, 0);
+        yield return new WaitForSeconds(0.6f); connieDirX = -1;
+        while (connieTransform.position.x > -1.3f) yield return null; connieDirX = 0; connieTransform.rotation = Quaternion.Euler(0, 0, 0);
         /**/
         /* OPOSSUM  */
         DisplayCompleteDialogueUI(); continueDialogue = false;
@@ -279,6 +282,7 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator Level01Cinematic2()
     {
+        firstTime = false;
         yield return new WaitForSeconds(0.8f);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
         /* Poner mareado a Ayka */
@@ -443,10 +447,14 @@ public class Level0Controller : MonoBehaviour
         HideCompleteDialogueUI();
         yield return new WaitForSeconds(0.8f);
         blackOverlay.SetActive(true); associationExercise.SetActive(true);
+        yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(true);
+        connieHelperIndicatorOverlay.SetActive(true); connieHelpIndicatorTutorial.SetActive(true);
         // Activar canvas screens que contengan info sobre el valor y los nombres de las figuras musicales.
     }
 
     void StartSecondCinematic() { StartCoroutine(Level01Cinematic2()); }
+    void StartWinCinematic() { Debug.Log("win xd"); }
+    public void HideConnieHelpIndicator() { connieHelperIndicatorOverlay.SetActive(false); connieHelpIndicatorTutorial.SetActive(false); }
 
     void DisplayDialogueSentence(Dialogue dialogue, int index)
     {

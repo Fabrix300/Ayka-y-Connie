@@ -20,9 +20,16 @@ public class AssociationExercise : MonoBehaviour
     public Color errorColor;
     public Color defaultColor;
 
+    public int timesToFail;
+    public int timesToWin;
     public event Action OnMistake;
+    public event Action OnError;
+    public event Action OnWin;
 
-    private List<AssociationButton[]> associationTypeButtonsList = new();
+    private int timesFailing = 0;
+    private int timesWinning = 0;
+    private Level0Controller levelController;
+    private readonly List<AssociationButton[]> associationTypeButtonsList = new();
     private AssociationButtonGameObject firstButtonSelected = null;
     private AssociationButtonGameObject secondButtonSelected = null;
     private readonly float timeToFadeColor = 1f;
@@ -34,7 +41,10 @@ public class AssociationExercise : MonoBehaviour
 
     private void OnEnable()
     {
+        levelController = FindObjectOfType<Level0Controller>();
+        Debug.Log(timesFailing);
         // Add AssociationTypeButtons to the list
+        associationTypeButtonsList.Clear();
         associationTypeButtonsList.Add(mFImages);
         associationTypeButtonsList.Add(mFNames);
         associationTypeButtonsList.Add(mFValues);
@@ -43,11 +53,8 @@ public class AssociationExercise : MonoBehaviour
         while (firstArray == secondArray) secondArray = UnityEngine.Random.Range(0, associationTypeButtonsList.Count);
         // Scramble randomly the elements inside to instantiate the buttons according to that scramble
         int[] firstArrayOrder = Shuffle(new int[]{ 0, 1, 2, 3 });
-        int[] secondArrayOrder = Shuffle(new int[]{ 0, 1, 2, 3 });
-        //Debug.Log("("+firstArrayOrder[0]+", "+firstArrayOrder[1]+", "+firstArrayOrder[2]+", "+firstArrayOrder[3]+")");
-        //Debug.Log("(" + secondArrayOrder[0] + ", " + secondArrayOrder[1] + ", " + secondArrayOrder[2] + ", " + secondArrayOrder[3] + ")");
+        int[] secondArrayOrder = Shuffle(new int[] { 0, 1, 2, 3 });
         // Instantiate the buttons
-        //foreach (AssociationButton aS in associationTypeButtonsList[firstArray])
         for (int i = 0; i < associationTypeButtonsList[firstArray].Length; i++)
         {
             AssociationButton aS = associationTypeButtonsList[firstArray][firstArrayOrder[i]];
@@ -88,8 +95,18 @@ public class AssociationExercise : MonoBehaviour
                 imageChildObject.GetComponent<TMP_Text>().text = aTB.buttonText;
             }
         }
+    }
 
-        //Debug.Log("Enable is first");
+    private void OnDisable()
+    {
+        foreach (Transform child in leftLayout.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in rightLayout.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     int[] Shuffle(int[] array)
@@ -107,7 +124,6 @@ public class AssociationExercise : MonoBehaviour
 
     private void CheckButton(AssociationButtonGameObject aBGO)
     {
-        Debug.Log(aBGO.associationButtonpair);
         if (!firstButtonSelected)
         {
             firstButtonSelected = aBGO;
@@ -156,6 +172,8 @@ public class AssociationExercise : MonoBehaviour
                     StartCoroutine(FadeToColorAndDisableButton(firstButtonSelectedButton,secondButtonSelectedButton,correctColor,Color.gray));
                     firstButtonSelected = null;
                     secondButtonSelected = null;
+                    timesWinning++;
+                    if (timesWinning == timesToWin) OnWin?.Invoke();
                 }
                 else
                 {
@@ -174,7 +192,9 @@ public class AssociationExercise : MonoBehaviour
                     StartCoroutine(FadeToColor(firstButtonSelectedButton,secondButtonSelectedButton,errorColor,defaultColor));
                     firstButtonSelected = null;
                     secondButtonSelected = null;
-                    OnMistake?.Invoke();
+                    timesFailing++;
+                    if (levelController.firstTime) OnMistake?.Invoke();
+                    else if (timesFailing == timesToFail) OnError?.Invoke();
                 }
             }
         }
