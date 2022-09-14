@@ -664,7 +664,8 @@ public class Level0Controller : MonoBehaviour
         }
         index = 0; continueDialogue = false;
         HideCompleteDialogueUI();
-        // ocultar el ui de juego, explotar al enemigo y seguir avanzando
+        // ocultar el ui de juego, explotar al enemigo (DONE)
+        // ahora debo hacer un fade para empzar a avanzar, todo ponerse negro y avanzar
     }
 
     public IEnumerator Level01CinematicError()
