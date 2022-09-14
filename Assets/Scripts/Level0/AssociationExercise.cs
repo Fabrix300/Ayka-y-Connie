@@ -194,7 +194,7 @@ public class AssociationExercise : MonoBehaviour
                     secondButtonSelected = null;
                     timesFailing++;
                     if (levelController.firstTime) OnMistake?.Invoke();
-                    else if (timesFailing == timesToFail) OnError?.Invoke();
+                    else if (timesFailing == timesToFail && !levelController.firstTimeExerciseTutorial) OnError?.Invoke();
                 }
             }
         }
