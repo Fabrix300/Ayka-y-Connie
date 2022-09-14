@@ -43,6 +43,7 @@ public class Level0Controller : MonoBehaviour
     public GameObject associationExercise;
     public GameObject connieHelperIndicatorOverlay;
     public GameObject connieHelpIndicatorTutorial;
+    public GameObject totalBlackOverlay;
 
     [Header("General Level Properties")]
     [HideInInspector] public bool firstTime = true;
@@ -89,14 +90,14 @@ public class Level0Controller : MonoBehaviour
         ConnieUpdateAnimation();
         if (opossumRb2d)
         {
-            opossumRb2d.velocity = new Vector2(opossumDirX * connieMovementSpeed * Time.deltaTime, opossumRb2d.velocity.y);
+            opossumRb2d.velocity = new Vector2(opossumDirX * connieMovementSpeed * Time.fixedDeltaTime, opossumRb2d.velocity.y);
             OpossumUpdateAnimation();
         }
     }
 
     public IEnumerator Level01Cinematic()
     {
-        blackOverlay.SetActive(false); associationExercise.SetActive(false);
+        blackOverlay.SetActive(false); associationExercise.SetActive(false); totalBlackOverlay.SetActive(false);
         connieHelperIndicatorOverlay.SetActive(false); connieHelpIndicatorTutorial.SetActive(false);
         lvlCarrotCounter.gameObject.SetActive(false); lvlPauseButton.gameObject.SetActive(false); lvlConnieHelperButton.gameObject.SetActive(false);
         yield return new WaitForSeconds(1.5f);
@@ -664,8 +665,9 @@ public class Level0Controller : MonoBehaviour
         }
         index = 0; continueDialogue = false;
         HideCompleteDialogueUI();
-        // ocultar el ui de juego, explotar al enemigo (DONE)
         // ahora debo hacer un fade para empzar a avanzar, todo ponerse negro y avanzar
+        totalBlackOverlay.SetActive(true);
+
     }
 
     public IEnumerator Level01CinematicError()
