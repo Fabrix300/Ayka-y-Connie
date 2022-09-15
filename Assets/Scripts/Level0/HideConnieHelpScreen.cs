@@ -11,8 +11,9 @@ public class HideConnieHelpScreen : MonoBehaviour
         connieHelpScreens.SetActive(false);
     }
 
-    public void ShowConnieHelpScreenGO()
+    public void ToggleConnieHelpScreenGO()
     {
-        connieHelpScreens.SetActive(true);
+        if(!connieHelpScreens.activeInHierarchy) connieHelpScreens.SetActive(true);
+        else connieHelpScreens.SetActive(false);
     }
 }

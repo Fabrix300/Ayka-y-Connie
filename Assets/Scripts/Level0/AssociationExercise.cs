@@ -41,8 +41,8 @@ public class AssociationExercise : MonoBehaviour
 
     private void OnEnable()
     {
+        timesFailing = 0;
         levelController = FindObjectOfType<Level0Controller>();
-        Debug.Log(timesFailing);
         // Add AssociationTypeButtons to the list
         associationTypeButtonsList.Clear();
         associationTypeButtonsList.Add(mFImages);

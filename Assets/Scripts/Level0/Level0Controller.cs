@@ -12,24 +12,26 @@ public class Level0Controller : MonoBehaviour
     public Transform aykaTransform;
     public Animator aykaAnimator;
     public float aykaMovementSpeed;
-    public AudioSource aykaVoice;
+    private AudioSource aykaVoice;
 
     [Header("Connie Properties")]
     public Sprite connieSpriteImage;
-    public Rigidbody2D connieRb2d;
-    public Transform connieTransform;
-    public Animator connieAnimator;
+    public GameObject conniePreFab;
+    private Rigidbody2D connieRb2d;
+    private Transform connieTransform;
+    private Animator connieAnimator;
     public float connieMovementSpeed;
-    public AudioSource connieVoice;
+    private AudioSource connieVoice;
 
     [Header("Extra Characters GameObjects")]
     public Sprite opossumSpriteImage;
-    public Rigidbody2D opossumRb2d;
-    public Transform opossumTransform;
-    public Animator opossumAnimator;
+    public GameObject opossumPreFab;
+    private Rigidbody2D opossumRb2d;
+    private Transform opossumTransform;
+    private Animator opossumAnimator;
     public float opossumMovementSpeed;
     private bool opossumNotDead = true;
-    public AudioSource opossumVoice;
+    private AudioSource opossumVoice;
 
     [Header("Dialogue Box Properties")]
     public Animator dialogueBoxAnimator;
@@ -55,6 +57,7 @@ public class Level0Controller : MonoBehaviour
     public float dialogueTimeBetweenLetters;
     [Range(-3, 3)] public float dialogueMinPitch;
     [Range(-3, 3)] public float dialogueMaxPitch;
+    public LevelCameraController levelCameraController;
 
     //private bool inDialogue = false;
     private Camera mainCamera;
@@ -72,7 +75,7 @@ public class Level0Controller : MonoBehaviour
     {
         mainCamera = Camera.main;
         FeedDialoguesArrays();
-        MoveCharactersToLimitOfCamera();
+        //MoveCharactersToLimitOfCamera();
         aykaVoice = AudioManager.instance.characterVoices[0].source;
         connieVoice = AudioManager.instance.characterVoices[1].source;
         opossumVoice = AudioManager.instance.characterVoices[2].source;
@@ -84,10 +87,16 @@ public class Level0Controller : MonoBehaviour
 
     private void FixedUpdate()
     {
-        aykaRb2d.velocity = new Vector2(aykaDirX * aykaMovementSpeed * Time.fixedDeltaTime, aykaRb2d.velocity.y);
-        AykaUpdateAnimation();
-        connieRb2d.velocity = new Vector2(connieDirX * connieMovementSpeed * Time.fixedDeltaTime, connieRb2d.velocity.y);
-        ConnieUpdateAnimation();
+        if (aykaRb2d)
+        {
+            aykaRb2d.velocity = new Vector2(aykaDirX * aykaMovementSpeed * Time.fixedDeltaTime, aykaRb2d.velocity.y);
+            AykaUpdateAnimation();
+        }
+        if (connieRb2d)
+        {
+            connieRb2d.velocity = new Vector2(connieDirX * connieMovementSpeed * Time.fixedDeltaTime, connieRb2d.velocity.y);
+            ConnieUpdateAnimation();
+        }
         if (opossumRb2d)
         {
             opossumRb2d.velocity = new Vector2(opossumDirX * connieMovementSpeed * Time.fixedDeltaTime, opossumRb2d.velocity.y);
@@ -123,6 +132,7 @@ public class Level0Controller : MonoBehaviour
         continueDialogue = false;   index = 0;
         HideCompleteDialogueUI();
         // CONNIE APPEARS
+        InstantiateAndSetConniePreFab();
         yield return new WaitForSeconds(.8f);
         connieDirX = -1;
         while (connieTransform.position.x > 1.2f) yield return null;
@@ -200,6 +210,7 @@ public class Level0Controller : MonoBehaviour
         HideCompleteDialogueUI();
         /* FINISHING CONNIE DIALOGUE 2 */
         /* OPOSSUM SCARES CONNIE THEN CONNIE GOES BEHIND AYKA AND CAMERA MOVES TO CENTER BOTH */
+        InstatiateAndSetOpossumPreFab();
         yield return new WaitForSeconds(.8f); opossumDirX = -1;
         while (opossumTransform.position.x > 2.8f) { yield return null; } opossumDirX = 0;
         yield return new WaitForSeconds(.3f); connieTransform.rotation = Quaternion.Euler(0, 0, 0);
@@ -666,12 +677,18 @@ public class Level0Controller : MonoBehaviour
         index = 0; continueDialogue = false;
         HideCompleteDialogueUI();
         totalBlackOverlay.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(StartPlaying());
     }
 
     public IEnumerator StartPlaying()
     {
         // aca empezamos a mover a los personajes y tal, los detenemos hasta llegar a las zarigueyas
-        yield return null;
+        // TRABAJAR EN LA GENEERACION DINAMICA DE TERRENO Y ENEMIGOS!!!!!
+        totalBlackOverlay.GetComponent<Animator>().SetInteger("state", 1);
+        yield return new WaitForSeconds(1.2f);
+        levelCameraController.gameObject.SetActive(true);
+        aykaDirX = 1; connieDirX = 1;
     }
 
     public IEnumerator Level01CinematicError()
@@ -789,6 +806,30 @@ public class Level0Controller : MonoBehaviour
     { 
         connieTransform.position = new Vector2((mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, connieRb2d.gameObject.transform.position.y);
         opossumTransform.position = new Vector2((mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 2f, opossumRb2d.gameObject.transform.position.y);
+    }
+
+    void InstantiateAndSetConniePreFab()
+    {
+        GameObject connieGO = Instantiate(
+            conniePreFab,
+            new Vector2((mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, conniePreFab.transform.position.y),
+            Quaternion.identity
+            );
+        connieRb2d = connieGO.GetComponent<Rigidbody2D>();
+        connieTransform = connieGO.transform;
+        connieAnimator = connieGO.GetComponent<Animator>();
+    }
+
+    void InstatiateAndSetOpossumPreFab()
+    {
+        GameObject opossumGO = Instantiate(
+            opossumPreFab,
+            new Vector2((mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, opossumPreFab.transform.position.y),
+            Quaternion.identity
+            );
+        opossumRb2d = opossumGO.GetComponent<Rigidbody2D>();
+        opossumTransform = opossumGO.transform;
+        opossumAnimator = opossumGO.GetComponent<Animator>();
     }
 
     private Dialogue aykaMonologue;
