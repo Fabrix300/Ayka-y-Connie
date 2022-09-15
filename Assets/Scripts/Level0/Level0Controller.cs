@@ -665,9 +665,13 @@ public class Level0Controller : MonoBehaviour
         }
         index = 0; continueDialogue = false;
         HideCompleteDialogueUI();
-        // ahora debo hacer un fade para empzar a avanzar, todo ponerse negro y avanzar
         totalBlackOverlay.SetActive(true);
+    }
 
+    public IEnumerator StartPlaying()
+    {
+        // aca empezamos a mover a los personajes y tal, los detenemos hasta llegar a las zarigueyas
+        yield return null;
     }
 
     public IEnumerator Level01CinematicError()
