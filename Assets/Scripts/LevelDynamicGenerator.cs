@@ -13,6 +13,7 @@ public class LevelDynamicGenerator : MonoBehaviour
     public float enemySeparationOffset;
 
     private int totalNumberOfElements;
+    private float[] enemyPositionsArray;
 
     private void Start()
     {
@@ -22,14 +23,23 @@ public class LevelDynamicGenerator : MonoBehaviour
 
     public void GenerateTerrainAndEnemies()
     {
+
+        enemyPositionsArray = new float[totalNumberOfElements];
         for (int i = 0; i < totalNumberOfElements; i++)
         {
             //instanciar terreno
             GameObject terrainGO = Instantiate(terrainPreFab, gridParent);
             terrainGO.transform.position = new Vector2(startingPoint + (i*separationOffset), 0f);
             //instanciar enemigo
-            GameObject opossumGO = Instantiate(enemyPreFab, enemyGOParent);
-            opossumGO.transform.position = new Vector2(startingPoint + enemySeparationOffset + (i * separationOffset), enemyPreFab.transform.position.y);
+            GameObject enemyGO = Instantiate(enemyPreFab, enemyGOParent);
+            float positionX = startingPoint + enemySeparationOffset + (i * separationOffset);
+            enemyGO.transform.position = new Vector2(positionX, enemyPreFab.transform.position.y);
+            enemyPositionsArray[i] = positionX;
         }
+    }
+
+    public float[] GetEnemyPositionsArray()
+    {
+        return enemyPositionsArray;
     }
 }

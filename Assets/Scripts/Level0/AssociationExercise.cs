@@ -22,9 +22,10 @@ public class AssociationExercise : MonoBehaviour
 
     public int timesToFail;
     public int timesToWin;
-    public event Action OnMistake;
+    public event Action OnErrorTutorial;
     public event Action OnError;
     public event Action OnWin;
+    public event Action OnWinTutorial;
 
     private int timesFailing = 0;
     private int timesWinning = 0;
@@ -173,7 +174,8 @@ public class AssociationExercise : MonoBehaviour
                     firstButtonSelected = null;
                     secondButtonSelected = null;
                     timesWinning++;
-                    if (timesWinning == timesToWin) OnWin?.Invoke();
+                    if (levelController.firstTimeExerciseTutorial) OnWinTutorial?.Invoke();
+                    else if (timesWinning == timesToWin && !levelController.firstTimeExerciseTutorial) OnWin?.Invoke();
                 }
                 else
                 {
@@ -193,7 +195,7 @@ public class AssociationExercise : MonoBehaviour
                     firstButtonSelected = null;
                     secondButtonSelected = null;
                     timesFailing++;
-                    if (levelController.firstTime) OnMistake?.Invoke();
+                    if (levelController.firstTime) OnErrorTutorial?.Invoke();
                     else if (timesFailing == timesToFail && !levelController.firstTimeExerciseTutorial) OnError?.Invoke();
                 }
             }

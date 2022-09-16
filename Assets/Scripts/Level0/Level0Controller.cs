@@ -79,8 +79,8 @@ public class Level0Controller : MonoBehaviour
         aykaVoice = AudioManager.instance.characterVoices[0].source;
         connieVoice = AudioManager.instance.characterVoices[1].source;
         opossumVoice = AudioManager.instance.characterVoices[2].source;
-        associationExercise.GetComponent<AssociationExercise>().OnMistake += StartSecondCinematic;
-        associationExercise.GetComponent<AssociationExercise>().OnWin += StartWinCinematic;
+        associationExercise.GetComponent<AssociationExercise>().OnErrorTutorial += StartSecondCinematic;
+        associationExercise.GetComponent<AssociationExercise>().OnWinTutorial += StartWinCinematic;
         associationExercise.GetComponent<AssociationExercise>().OnError += StartErrorCinematic;
         StartCoroutine(Level01Cinematic());
     }
@@ -684,11 +684,17 @@ public class Level0Controller : MonoBehaviour
     public IEnumerator StartPlaying()
     {
         // aca empezamos a mover a los personajes y tal, los detenemos hasta llegar a las zarigueyas
-        // TRABAJAR EN LA GENEERACION DINAMICA DE TERRENO Y ENEMIGOS!!!!!
         totalBlackOverlay.GetComponent<Animator>().SetInteger("state", 1);
         yield return new WaitForSeconds(1.2f);
+        LevelDynamicGenerator levelDynamicGen = GetComponent<LevelDynamicGenerator>();
         levelCameraController.gameObject.SetActive(true);
         aykaDirX = 1; connieDirX = 1;
+        float[] enemyPositionsArray = levelDynamicGen.GetEnemyPositionsArray();
+        for (int i = 0; i < enemyPositionsArray.Length; i++)
+        {
+            while (aykaTransform.position.x < enemyPositionsArray[i] - 1.5) yield return null;
+
+        }
     }
 
     public IEnumerator Level01CinematicError()
