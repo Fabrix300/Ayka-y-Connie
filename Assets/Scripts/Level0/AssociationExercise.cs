@@ -174,7 +174,7 @@ public class AssociationExercise : MonoBehaviour
                     firstButtonSelected = null;
                     secondButtonSelected = null;
                     timesWinning++;
-                    if (levelController.firstTimeExerciseTutorial) OnWinTutorial?.Invoke();
+                    if (timesWinning == timesToWin && levelController.firstTimeExerciseTutorial) OnWinTutorial?.Invoke();
                     else if (timesWinning == timesToWin && !levelController.firstTimeExerciseTutorial) OnWin?.Invoke();
                 }
                 else
