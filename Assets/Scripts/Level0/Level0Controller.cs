@@ -61,7 +61,7 @@ public class Level0Controller : MonoBehaviour
     public LevelCameraController levelCameraController;
     private LevelDynamicGenerator levelDynamicGen;
     private GameObject[] enemyGameObjectsArray;
-    private int indexForEnemies = 0;
+    private int indexForEnemies = -1;
 
     private Camera mainCamera;
     private bool continueDialogue = false;
@@ -687,24 +687,54 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator MoveToNextEnemy()
     {
+        // chequear si es el ultimo index del array y si es pues ganas el nivel
+        indexForEnemies++;
+        if (indexForEnemies == enemyGameObjectsArray.Length)
+        {
+            Debug.Log("Final de nivel!!");
+        }
         // aca empezamos a mover a los personajes y tal, los detenemos hasta llegar a las zarigueyas
         aykaDirX = 1; connieDirX = 1;
         float xPositionOfEnemyGameObject = enemyGameObjectsArray[indexForEnemies].transform.position.x;
         while (aykaTransform.position.x < xPositionOfEnemyGameObject - 3) yield return null;
         aykaDirX = 0; connieDirX = 0;
         // Activar ejercicio
+        StartCoroutine(ActivateExerciseUI());
+    }
+
+    public IEnumerator ActivateExerciseUI()
+    {
+        yield return new WaitForSeconds(0.8f);
+        blackOverlay.SetActive(true); associationExercise.SetActive(true);
     }
 
     public IEnumerator Level01ErrorAction()
     {
         // ocultar el ui de juego y hacer que la zarigueya robe una zanahoria
-        yield return null;
+        yield return new WaitForSeconds(0.8f);
+        blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
+        /* Poner mareado a Ayka */
+        yield return new WaitForSeconds(1f); aykaDizzy = true;
+        yield return new WaitForSeconds(0.8f);
+        opossumDirX = -1; while (opossumTransform.position.x > aykaTransform.position.x - 0.1f) { yield return null; }
+        opossumDirX = 0;
+        connieHurt = true; yield return new WaitForSeconds(0.5f); connieHurt = false; yield return new WaitForSeconds(0.2f);
+        // Mover a la zarigueya hasta el final izquierdo de la pantalla y destruirla (TODO)
+        opossumDirX = -1; while (opossumTransform.position.x < 2.6f) { yield return null; }
+        opossumDirX = 0; opossumTransform.rotation = Quaternion.Euler(0, 0, 0);
+        aykaDizzy = false;
     }
 
     public IEnumerator Level01WinAction()
     {
         // ocultar el ui de juego y hacer que la zarigueya explote
-        yield return null;
+        yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(false);
+        blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
+        yield return new WaitForSeconds(1.8f);
+        // Get animator and explode opossum
+        enemyGameObjectsArray[indexForEnemies].GetComponent<Animator>().SetInteger("state", 2);
+        yield return new WaitForSeconds(1.5f);
+        StartCoroutine(MoveToNextEnemy());
     }
 
     void StartSecondCinematic() { StartCoroutine(Level01Cinematic2()); }
