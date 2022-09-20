@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2825973377227764028}
   - component: {fileID: 2825973377227764029}
   - component: {fileID: 5773868201667784043}
+  - component: {fileID: 2483837732537483054}
   m_Layer: 3
   m_Name: Opossum
   m_TagString: Untagged
@@ -165,5 +166,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c59bf06ee7b694241aee584e1df5553c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2483837732537483054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2825973377227764018}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d4b7104a42ca49409358d9bc7cb6761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

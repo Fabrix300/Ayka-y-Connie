@@ -105,7 +105,7 @@ public class Level0Controller : MonoBehaviour
         }
         if (opossumRb2d)
         {
-            opossumRb2d.velocity = new Vector2(opossumDirX * connieMovementSpeed * Time.fixedDeltaTime, opossumRb2d.velocity.y);
+            opossumRb2d.velocity = new Vector2(opossumDirX * opossumMovementSpeed * Time.fixedDeltaTime, opossumRb2d.velocity.y);
             OpossumUpdateAnimation();
         }
     }
