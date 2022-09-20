@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
 
     public bool isFirstTimePlaying;
     public int activeLevel;
-    public int carrotsPerLevel;
+    public int enemiesPerLevel;
+    public int carrotLivesPerLevel;
     private float transitionsTime = 1f;
     public GameObject loadingScreenGameObject;
 
@@ -37,8 +38,8 @@ public class GameManager : MonoBehaviour
         // if game doesnt have saved info...
         gameLevelList = new GameLevel[2]
         {
-            new GameLevel("Nivel 0", "Introducción", carrotsPerLevel, carrotsPerLevel, true, false),
-            new GameLevel("Nivel 1", "Equivalencias", carrotsPerLevel, carrotsPerLevel, false, false)
+            new GameLevel("Nivel 0", "Introducción", carrotLivesPerLevel, carrotLivesPerLevel, true, false),
+            new GameLevel("Nivel 1", "Equivalencias", carrotLivesPerLevel, carrotLivesPerLevel, false, false)
         };
     }
 

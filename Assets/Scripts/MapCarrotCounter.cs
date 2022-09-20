@@ -10,7 +10,7 @@ public class MapCarrotCounter : MonoBehaviour
     void Start()
     {
         GameManager gameManager = GameManager.instance;
-        int allLevelsTotalCarrots = gameManager.carrotsPerLevel * gameManager.gameLevelList.Length;
+        int allLevelsTotalCarrots = gameManager.carrotLivesPerLevel * gameManager.gameLevelList.Length;
         int allLevelsCurrentCarrots = 0;
         foreach (GameLevel gL in gameManager.gameLevelList)
         {

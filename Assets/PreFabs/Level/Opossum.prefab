@@ -175,8 +175,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2825973377227764018}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d4b7104a42ca49409358d9bc7cb6761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEnabled: 0
+  opossumDirX: 0
+  opossumMovementSpeed: 200
+  opossumNotDead: 1

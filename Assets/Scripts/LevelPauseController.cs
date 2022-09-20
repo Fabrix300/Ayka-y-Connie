@@ -56,10 +56,10 @@ public class LevelPauseController : MonoBehaviour
 
     public IEnumerator ExitLevelCoroutine()
     {
-        Time.timeScale = 1f;
-        LevelIsPaused = false;
         configMenuPanelAnim.SetInteger("state", 1);
         configMenuOverlayAnim.SetInteger("state", 1);
+        Time.timeScale = 1f;
+        LevelIsPaused = false;
         yield return new WaitForSeconds(1f);
         GameManager.instance.LoadSceneByName("GameMap");
     }

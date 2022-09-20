@@ -1,5 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,6 +8,8 @@ public class LevelCarrotCounter : MonoBehaviour
 {
     public TMP_Text levelCarrotCounterText;
     public GameObject carrotActionCanvas;
+
+    public event Action OnNoCarrotsLeft;
 
     private int totalCarrots;
     private int currentCarrots;
@@ -16,7 +19,7 @@ public class LevelCarrotCounter : MonoBehaviour
     {
         //GameManager gameManager = GameManager.instance;
         //actualGameLevel = GameManager.instance.gameLevelList[GameManager.instance.activeLevel];
-        totalCarrots = GameManager.instance.carrotsPerLevel;
+        totalCarrots = GameManager.instance.carrotLivesPerLevel;
         currentCarrots = totalCarrots;
         levelCarrotCounterText.text = currentCarrots + "/" + totalCarrots;
     }
@@ -25,6 +28,7 @@ public class LevelCarrotCounter : MonoBehaviour
     {
         Instantiate(carrotActionCanvas, positionToInstantiateEffect, Quaternion.identity);
         currentCarrots--;
+        if (currentCarrots == 0) OnNoCarrotsLeft?.Invoke();
         levelCarrotCounterText.text = currentCarrots + "/" + totalCarrots;
     }
 }

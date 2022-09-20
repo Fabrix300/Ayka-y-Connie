@@ -265,7 +265,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFirstTimePlaying: 0
   activeLevel: 0
-  carrotsPerLevel: 8
+  enemiesPerLevel: 8
+  carrotLivesPerLevel: 3
   loadingScreenGameObject: {fileID: 0}
 --- !u!1001 &1829787171
 PrefabInstance:

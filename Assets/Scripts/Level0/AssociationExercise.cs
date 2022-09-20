@@ -35,13 +35,9 @@ public class AssociationExercise : MonoBehaviour
     private AssociationButtonGameObject secondButtonSelected = null;
     private readonly float timeToFadeColor = 1f;
 
-    private void Start()
-    {
-        Debug.Log("Start is second");
-    }
-
     private void OnEnable()
     {
+        timesWinning = 0;
         timesFailing = 0;
         levelController = FindObjectOfType<Level0Controller>();
         // Add AssociationTypeButtons to the list
@@ -174,8 +170,8 @@ public class AssociationExercise : MonoBehaviour
                     firstButtonSelected = null;
                     secondButtonSelected = null;
                     timesWinning++;
-                    if (timesWinning == timesToWin && levelController.firstTimeExerciseTutorial) OnWinTutorial?.Invoke();
-                    else if (timesWinning == timesToWin && !levelController.firstTimeExerciseTutorial) OnWin?.Invoke();
+                    if (timesWinning == timesToWin && levelController.firstTimeExerciseTutorial) { OnWinTutorial?.Invoke(); }
+                    else if (timesWinning == timesToWin && !levelController.firstTimeExerciseTutorial) { OnWin?.Invoke(); }
                 }
                 else
                 {
@@ -195,8 +191,8 @@ public class AssociationExercise : MonoBehaviour
                     firstButtonSelected = null;
                     secondButtonSelected = null;
                     timesFailing++;
-                    if (levelController.firstTime) OnErrorTutorial?.Invoke();
-                    else if (timesFailing == timesToFail && !levelController.firstTimeExerciseTutorial) OnError?.Invoke();
+                    if (levelController.firstTime) { OnErrorTutorial?.Invoke(); }
+                    else if (timesFailing == timesToFail && !levelController.firstTimeExerciseTutorial) { OnError?.Invoke(); }
                 }
             }
         }

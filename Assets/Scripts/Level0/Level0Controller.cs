@@ -85,7 +85,7 @@ public class Level0Controller : MonoBehaviour
         opossumVoice = AudioManager.instance.characterVoices[2].source;
         AssociationExercise associationExerciseComponent = associationExercise.GetComponent<AssociationExercise>();
         associationExerciseComponent.OnErrorTutorial += StartSecondCinematic;
-        associationExerciseComponent.OnWinTutorial += StartWinTutorialCinematic;
+        associationExerciseComponent.OnWinTutorial += StartThirdCinematic;
         associationExerciseComponent.OnError += StartErrorCinematic;
         associationExerciseComponent.OnWin += StartWinCinematic;
         StartCoroutine(Level01Cinematic());
@@ -478,7 +478,7 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator Level01Cinematic3Win()
     {
-        firstTimeExerciseTutorial = false;
+        firstTime = false; firstTimeExerciseTutorial = false;
         yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(false);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
         yield return new WaitForSeconds(1.8f);
@@ -672,7 +672,7 @@ public class Level0Controller : MonoBehaviour
         if (isTypeSentenceCoroutineRunning)
         {
             continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue8.sentences[indexForDialogue];
+            dialogueBoxSentenceBox.text = connieDialogue10.sentences[indexForDialogue];
             while (!continueDialogue) yield return null;
         }
         indexForDialogue = 0; continueDialogue = false;
@@ -693,13 +693,16 @@ public class Level0Controller : MonoBehaviour
         {
             Debug.Log("Final de nivel!!");
         }
-        // aca empezamos a mover a los personajes y tal, los detenemos hasta llegar a las zarigueyas
-        aykaDirX = 1; connieDirX = 1;
-        float xPositionOfEnemyGameObject = enemyGameObjectsArray[indexForEnemies].transform.position.x;
-        while (aykaTransform.position.x < xPositionOfEnemyGameObject - 3) yield return null;
-        aykaDirX = 0; connieDirX = 0;
-        // Activar ejercicio
-        StartCoroutine(ActivateExerciseUI());
+        else
+        {
+            // aca empezamos a mover a los personajes y tal, los detenemos hasta llegar a las zarigueyas
+            aykaDirX = 1; connieDirX = 1;
+            float xPositionOfEnemyGameObject = enemyGameObjectsArray[indexForEnemies].transform.position.x;
+            while (aykaTransform.position.x < xPositionOfEnemyGameObject - 3) yield return null;
+            aykaDirX = 0; connieDirX = 0;
+            // Activar ejercicio
+            StartCoroutine(ActivateExerciseUI());
+        }
     }
 
     public IEnumerator ActivateExerciseUI()
@@ -716,13 +719,22 @@ public class Level0Controller : MonoBehaviour
         /* Poner mareado a Ayka */
         yield return new WaitForSeconds(1f); aykaDizzy = true;
         yield return new WaitForSeconds(0.8f);
-        opossumDirX = -1; while (opossumTransform.position.x > aykaTransform.position.x - 0.1f) { yield return null; }
-        opossumDirX = 0;
-        connieHurt = true; yield return new WaitForSeconds(0.5f); connieHurt = false; yield return new WaitForSeconds(0.2f);
+        // Traer componente de la zarigueya en cuestion
+        EnemyController enemController = enemyGameObjectsArray[indexForEnemies].GetComponent<EnemyController>();
+        Transform enemTransform = enemyGameObjectsArray[indexForEnemies].transform;
+        enemController.isEnabled = true; enemController.opossumDirX = -1;
+        while (enemTransform.position.x > aykaTransform.position.x - 0.1f) { yield return null; }
+        enemController.opossumDirX = 0;
+        connieHurt = true; yield return new WaitForSeconds(0.5f); connieHurt = false;
+        lvlCarrotCounter.DiminishOneCarrot(new Vector2(connieTransform.position.x + 0.8f, connieTransform.position.y)); yield return new WaitForSeconds(0.3f);
         // Mover a la zarigueya hasta el final izquierdo de la pantalla y destruirla (TODO)
-        opossumDirX = -1; while (opossumTransform.position.x < 2.6f) { yield return null; }
-        opossumDirX = 0; opossumTransform.rotation = Quaternion.Euler(0, 0, 0);
-        aykaDizzy = false;
+        float positionXCamera = mainCamera.transform.position.x;
+        float widthOfCamera =  mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x - positionXCamera;
+        enemController.opossumDirX = -1; while (enemTransform.position.x > (positionXCamera - widthOfCamera) - 1.4f) { yield return null; }
+        enemController.opossumDirX = 0; enemController.opossumNotDead = false;
+        aykaDizzy = false; yield return new WaitForSeconds(0.3f);
+        StartCoroutine(MoveToNextEnemy());
+
     }
 
     public IEnumerator Level01WinAction()
@@ -730,15 +742,15 @@ public class Level0Controller : MonoBehaviour
         // ocultar el ui de juego y hacer que la zarigueya explote
         yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(false);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
-        yield return new WaitForSeconds(1.8f);
+        yield return new WaitForSeconds(1.5f);
         // Get animator and explode opossum
         enemyGameObjectsArray[indexForEnemies].GetComponent<Animator>().SetInteger("state", 2);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.3f);
         StartCoroutine(MoveToNextEnemy());
     }
 
     void StartSecondCinematic() { StartCoroutine(Level01Cinematic2()); }
-    void StartWinTutorialCinematic() { StartCoroutine(Level01Cinematic3Win()); }
+    void StartThirdCinematic() { StartCoroutine(Level01Cinematic3Win()); }
     void StartErrorCinematic() { StartCoroutine(Level01ErrorAction()); }
     void StartWinCinematic() { StartCoroutine(Level01WinAction()); }
     public void HideConnieHelpIndicator() { connieHelperIndicatorOverlay.SetActive(false); connieHelpIndicatorTutorial.SetActive(false); }

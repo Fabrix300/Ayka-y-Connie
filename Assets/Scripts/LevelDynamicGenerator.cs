@@ -17,7 +17,7 @@ public class LevelDynamicGenerator : MonoBehaviour
 
     private void Start()
     {
-        totalNumberOfElements = GameManager.instance.carrotsPerLevel;
+        totalNumberOfElements = GameManager.instance.enemiesPerLevel;
         GenerateTerrainAndEnemies();
     }
 
@@ -33,7 +33,6 @@ public class LevelDynamicGenerator : MonoBehaviour
             GameObject enemyGO = Instantiate(enemyPreFab, enemyGOParent);
             float positionX = startingPoint + enemySeparationOffset + (i * separationOffset);
             enemyGO.transform.position = new Vector2(positionX, enemyPreFab.transform.position.y);
-            Debug.Log(enemyGO.transform.position.x);
             enemyGameObjectsArray[i] = enemyGO;
         }
     }
