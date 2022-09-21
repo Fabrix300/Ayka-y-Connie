@@ -59,6 +59,8 @@ public class Level0Controller : MonoBehaviour
     [Range(-3, 3)] public float dialogueMinPitch;
     [Range(-3, 3)] public float dialogueMaxPitch;
     public LevelCameraController levelCameraController;
+    public EndScreensController endScreensController;
+    public LevelProgressBarController lvlProgressBarController;
     private LevelDynamicGenerator levelDynamicGen;
     private GameObject[] enemyGameObjectsArray;
     private int indexForEnemies = -1;
@@ -689,12 +691,16 @@ public class Level0Controller : MonoBehaviour
     {
         // chequear si es el ultimo index del array y si es pues ganas el nivel
         indexForEnemies++;
-        if (indexForEnemies == enemyGameObjectsArray.Length)
+        int currentCarrots = lvlCarrotCounter.GetCurrentCarrots();
+        if (currentCarrots == 0) { endScreensController.ShowLoseScreen(); }
+        else if (indexForEnemies == enemyGameObjectsArray.Length) 
         {
-            Debug.Log("Final de nivel!!");
+            lvlProgressBarController.AppearLevelProgressBarAndUpdate(indexForEnemies);
+            yield return new WaitForSeconds(1.2f); endScreensController.ShowWinScreen();
         }
         else
         {
+            if (indexForEnemies > 0) { lvlProgressBarController.AppearLevelProgressBarAndUpdate(indexForEnemies); }
             // aca empezamos a mover a los personajes y tal, los detenemos hasta llegar a las zarigueyas
             aykaDirX = 1; connieDirX = 1;
             float xPositionOfEnemyGameObject = enemyGameObjectsArray[indexForEnemies].transform.position.x;
@@ -734,7 +740,6 @@ public class Level0Controller : MonoBehaviour
         enemController.opossumDirX = 0; enemController.opossumNotDead = false;
         aykaDizzy = false; yield return new WaitForSeconds(0.3f);
         StartCoroutine(MoveToNextEnemy());
-
     }
 
     public IEnumerator Level01WinAction()
@@ -854,6 +859,7 @@ public class Level0Controller : MonoBehaviour
     }
 
     public void OnContinueDialogue() { continueDialogue = true; }
+    public int GetIndexForEnemies() { return indexForEnemies; }
 
     void MoveCharactersToLimitOfCamera() 
     { 

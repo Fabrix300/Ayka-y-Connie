@@ -9,8 +9,6 @@ public class LevelCarrotCounter : MonoBehaviour
     public TMP_Text levelCarrotCounterText;
     public GameObject carrotActionCanvas;
 
-    public event Action OnNoCarrotsLeft;
-
     private int totalCarrots;
     private int currentCarrots;
     //private GameLevel actualGameLevel;
@@ -28,7 +26,11 @@ public class LevelCarrotCounter : MonoBehaviour
     {
         Instantiate(carrotActionCanvas, positionToInstantiateEffect, Quaternion.identity);
         currentCarrots--;
-        if (currentCarrots == 0) OnNoCarrotsLeft?.Invoke();
         levelCarrotCounterText.text = currentCarrots + "/" + totalCarrots;
+    }
+
+    public int GetCurrentCarrots()
+    {
+        return currentCarrots;
     }
 }
