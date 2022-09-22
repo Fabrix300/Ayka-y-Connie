@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class EndScreensController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class EndScreensController : MonoBehaviour
     public GameObject winScreen;
     public GameObject loseScreen;
     public Color notObtainedLiveIndicatorIconColor;
+    public TMP_Text winMessageText;
 
     private GameManager gameManager;
 
@@ -37,6 +39,24 @@ public class EndScreensController : MonoBehaviour
                 GameObject liveIndicatorGO = Instantiate(LivesIndicatorPreFab, livesParent);
                 liveIndicatorGO.GetComponent<Image>().color = notObtainedLiveIndicatorIconColor;
             }
+        }
+        switch (lvlCarrotCounter.GetCurrentCarrots())
+        {
+            case 1:
+                {
+                    winMessageText.text = "¡Puedes mejorar!";
+                    break;
+                }
+            case 2:
+                {
+                    winMessageText.text = "¡Bien!";
+                    break;
+                }
+            case 3:
+                {
+                    winMessageText.text = "¡Excelente!";
+                    break;
+                }
         }
         blackOverlay.SetActive(true);
         winScreen.SetActive(true);
