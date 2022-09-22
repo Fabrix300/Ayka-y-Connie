@@ -61,6 +61,7 @@ public class Level0Controller : MonoBehaviour
     public LevelCameraController levelCameraController;
     public EndScreensController endScreensController;
     public LevelProgressBarController lvlProgressBarController;
+    public GameObject skipCinematicButton;
     private LevelDynamicGenerator levelDynamicGen;
     private GameObject[] enemyGameObjectsArray;
     private int indexForEnemies = -1;
@@ -114,10 +115,12 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator Level01Cinematic()
     {
+        skipCinematicButton.SetActive(false);
         blackOverlay.SetActive(false); associationExercise.SetActive(false); totalBlackOverlay.SetActive(false);
         connieHelperIndicatorOverlay.SetActive(false); connieHelpIndicatorTutorial.SetActive(false);
         lvlCarrotCounter.gameObject.SetActive(false); lvlPauseButton.gameObject.SetActive(false); lvlConnieHelperButton.gameObject.SetActive(false);
         yield return new WaitForSeconds(1.5f);
+        if (GameManager.instance.gameLevelList[GameManager.instance.activeLevel].hasBeenPlayed) skipCinematicButton.SetActive(true);
         /* STARTING AYKA MONOLOGUE */
         DisplayCompleteDialogueUI();   continueDialogue = false;
         DisplayDialogueSentence(aykaMonologue, indexForDialogue);
@@ -216,8 +219,11 @@ public class Level0Controller : MonoBehaviour
         }
         indexForDialogue = 0; continueDialogue = false;
         HideCompleteDialogueUI();
-        /* FINISHING CONNIE DIALOGUE 2 */
-        /* OPOSSUM SCARES CONNIE THEN CONNIE GOES BEHIND AYKA AND CAMERA MOVES TO CENTER BOTH */
+        /* HIDING SKIP CINEMATIC BUTTON */
+        if (skipCinematicButton.activeInHierarchy) skipCinematicButton.GetComponent<Animator>().SetInteger("state", 1);
+        /**/
+            /* FINISHING CONNIE DIALOGUE 2 */
+            /* OPOSSUM SCARES CONNIE THEN CONNIE GOES BEHIND AYKA AND CAMERA MOVES TO CENTER BOTH */
         InstatiateAndSetOpossumPreFab();
         yield return new WaitForSeconds(.8f); opossumDirX = -1;
         while (opossumTransform.position.x > 2.8f) { yield return null; } opossumDirX = 0;
@@ -754,11 +760,35 @@ public class Level0Controller : MonoBehaviour
         StartCoroutine(MoveToNextEnemy());
     }
 
+    public IEnumerator SkipCoroutineCinematic(GameObject skipCinematicButton)
+    {
+        firstTime = false; firstTimeExerciseTutorial = false; continueDialogue = false; indexForDialogue = 0;
+        skipCinematicButton.GetComponent<Button>().interactable = false;
+        skipCinematicButton.GetComponent<Animator>().SetInteger("state", 1);
+        HideCompleteDialogueUI();
+        totalBlackOverlay.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        lvlCarrotCounter.gameObject.SetActive(true); lvlPauseButton.gameObject.SetActive(true);
+        if (opossumTransform) Destroy(opossumTransform.gameObject);
+        if (connieTransform) connieTransform.SetPositionAndRotation(new Vector2(-1.3f, connieTransform.position.y), Quaternion.Euler(0, 0, 0));
+        else { InstantiateAndSetConniePreFab(); connieTransform.SetPositionAndRotation(new Vector2(-1.3f, connieTransform.position.y), Quaternion.Euler(0, 0, 0)); }
+        totalBlackOverlay.GetComponent<Animator>().SetInteger("state", 1); yield return new WaitForSeconds(1.2f);
+        levelCameraController.gameObject.SetActive(true);
+        enemyGameObjectsArray = levelDynamicGen.GetEnemyGameObjectsArray();
+        StartCoroutine(MoveToNextEnemy());
+    }
+
     void StartSecondCinematic() { StartCoroutine(Level01Cinematic2()); }
     void StartThirdCinematic() { StartCoroutine(Level01Cinematic3Win()); }
     void StartErrorCinematic() { StartCoroutine(Level01ErrorAction()); }
     void StartWinCinematic() { StartCoroutine(Level01WinAction()); }
     public void HideConnieHelpIndicator() { connieHelperIndicatorOverlay.SetActive(false); connieHelpIndicatorTutorial.SetActive(false); }
+
+    public void SkipCinematic(GameObject skipCinematicButton)
+    {
+        GameObject gO = skipCinematicButton;
+        StartCoroutine(SkipCoroutineCinematic(gO));
+    }
 
     void DisplayDialogueSentence(Dialogue dialogue, int index)
     {
@@ -878,7 +908,6 @@ public class Level0Controller : MonoBehaviour
         connieTransform = connieGO.transform;
         connieAnimator = connieGO.GetComponent<Animator>();
     }
-
     void InstatiateAndSetOpossumPreFab()
     {
         GameObject opossumGO = Instantiate(
