@@ -14,7 +14,7 @@ public class MapCarrotCounter : MonoBehaviour
         int allLevelsCurrentCarrots = 0;
         foreach (GameLevel gL in gameManager.gameLevelList)
         {
-            allLevelsCurrentCarrots += gL.carrotsLeft;
+            if (gL.hasBeenPlayed) { allLevelsCurrentCarrots += gL.carrotsLeft; }
         }
         carrotCounterText.text = allLevelsCurrentCarrots + "/" + allLevelsTotalCarrots;
     }
