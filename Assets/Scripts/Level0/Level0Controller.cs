@@ -68,9 +68,10 @@ public class Level0Controller : MonoBehaviour
 
     private Camera mainCamera;
     private bool continueDialogue = false;
-    private int indexForDialogue = 0;
+    //private int indexForDialogue = 0;
     private IEnumerator typeSentenceCoroutine;
     private bool isTypeSentenceCoroutineRunning;
+    private bool mainThreadStopped = false;
     private int aykaDirX = 0;
     private bool aykaDizzy = false;
     private int connieDirX = 0;
@@ -115,201 +116,57 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator Level01Cinematic()
     {
-        skipCinematicButton.SetActive(false);
-        blackOverlay.SetActive(false); associationExercise.SetActive(false); totalBlackOverlay.SetActive(false);
-        connieHelperIndicatorOverlay.SetActive(false); connieHelpIndicatorTutorial.SetActive(false);
+        skipCinematicButton.SetActive(false); blackOverlay.SetActive(false); associationExercise.SetActive(false);
+        totalBlackOverlay.SetActive(false); connieHelperIndicatorOverlay.SetActive(false); connieHelpIndicatorTutorial.SetActive(false);
         lvlCarrotCounter.gameObject.SetActive(false); lvlPauseButton.gameObject.SetActive(false); lvlConnieHelperButton.gameObject.SetActive(false);
         yield return new WaitForSeconds(1.5f);
         if (GameManager.instance.gameLevelList[GameManager.instance.activeLevel].hasBeenPlayed) skipCinematicButton.SetActive(true);
         /* STARTING AYKA MONOLOGUE */
-        DisplayCompleteDialogueUI();   continueDialogue = false;
-        DisplayDialogueSentence(aykaMonologue, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaMonologue.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++;   continueDialogue = false;
-        DisplayDialogueSentence(aykaMonologue, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaMonologue.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false;   indexForDialogue = 0;
+        DisplayCompleteDialogueUI(); continueDialogue = false;  mainThreadStopped = true;
+        StartCoroutine(ProcessDialogueObjectSentences(aykaMonologue));
+        while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI();
         // CONNIE APPEARS
-        InstantiateAndSetConniePreFab();
-        yield return new WaitForSeconds(.8f);
-        connieDirX = -1;
-        while (connieTransform.position.x > 1.2f) yield return null;
-        connieDirX = 0;
-        connieRb2d.AddForce(Vector2.up * 200);
+        InstantiateAndSetConniePreFab(); yield return new WaitForSeconds(.8f);
+        connieDirX = -1;  while (connieTransform.position.x > 1.2f) { yield return null; }
+        connieDirX = 0; connieRb2d.AddForce(Vector2.up * 200);
         /* STARTING CONNIE DIALOGUE 1 */
         DisplayCompleteDialogueUI(); continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue1, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue1.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue1, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue1.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
-        /* FINISHING CONNIE DIALOGUE 1 */
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue1));
+        while (mainThreadStopped) { yield return null; }
         /* STARTING AYKA DIALOGUE 1 */
-        DisplayDialogueSentence(aykaDialogue1, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue1.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue1, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue1.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
-        /* FINISHING AYKA DIALOGUE 1 */
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(aykaDialogue1));
+        while (mainThreadStopped) { yield return null; }
         /* STARTING CONNIE DIALOGUE 2 */
-        DisplayDialogueSentence(connieDialogue2, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue2.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue2, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue2.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue++;
-        DisplayDialogueSentence(connieDialogue2, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue2.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue2));
+        while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI();
         /* HIDING SKIP CINEMATIC BUTTON */
         if (skipCinematicButton.activeInHierarchy) skipCinematicButton.GetComponent<Animator>().SetInteger("state", 1);
-        /**/
-            /* FINISHING CONNIE DIALOGUE 2 */
-            /* OPOSSUM SCARES CONNIE THEN CONNIE GOES BEHIND AYKA AND CAMERA MOVES TO CENTER BOTH */
-        InstatiateAndSetOpossumPreFab();
-        yield return new WaitForSeconds(.8f); opossumDirX = -1;
+        /* OPOSSUM SCARES CONNIE THEN CONNIE GOES BEHIND AYKA AND CAMERA MOVES TO CENTER BOTH */
+        InstatiateAndSetOpossumPreFab(); yield return new WaitForSeconds(.8f); opossumDirX = -1;
         while (opossumTransform.position.x > 2.8f) { yield return null; } opossumDirX = 0;
-        yield return new WaitForSeconds(.3f); connieTransform.rotation = Quaternion.Euler(0, 0, 0);
+        yield return new WaitForSeconds(0.3f); connieTransform.rotation = Quaternion.Euler(0, 0, 0);
         yield return new WaitForSeconds(0.5f); connieRb2d.AddForce(Vector2.up * 200);
         yield return new WaitForSeconds(0.6f); connieDirX = -1;
-        while (connieTransform.position.x > -1.3f) yield return null; connieDirX = 0; connieTransform.rotation = Quaternion.Euler(0, 0, 0);
-        /**/
-        /* OPOSSUM  */
+        while (connieTransform.position.x > -1.3f) { yield return null; }
+        connieDirX = 0; connieTransform.rotation = Quaternion.Euler(0, 0, 0);
+        /* opossumDialogue1  */
         DisplayCompleteDialogueUI(); continueDialogue = false;
-        DisplayDialogueSentence(opossumDialogue1, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue1.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue++;
-        DisplayDialogueSentence(opossumDialogue1, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue1.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
-        DisplayDialogueSentence(connieDialogue3, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue3.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue++;
-        DisplayDialogueSentence(connieDialogue3, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue3.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
-        DisplayDialogueSentence(aykaDialogue2, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue2.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue++;
-        DisplayDialogueSentence(aykaDialogue2, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue2.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
-        DisplayDialogueSentence(connieDialogue4, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue4.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue++;
-        DisplayDialogueSentence(connieDialogue4, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue4.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(opossumDialogue1));
+        while (mainThreadStopped) { yield return null; }
+        // connieDialogue3
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue3));
+        while (mainThreadStopped) { yield return null; }
+        // aykaDialogue2
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(aykaDialogue2));
+        while (mainThreadStopped) { yield return null; }
+        // connieDialogue4
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue4));
+        while (mainThreadStopped) { yield return null; }
         /**/
-        HideCompleteDialogueUI();
-        yield return new WaitForSeconds(0.8f); lvlCarrotCounter.gameObject.SetActive(true); lvlPauseButton.gameObject.SetActive(true);
-        blackOverlay.SetActive(true); associationExercise.SetActive(true);
+        HideCompleteDialogueUI(); yield return new WaitForSeconds(0.8f); lvlCarrotCounter.gameObject.SetActive(true);
+        lvlPauseButton.gameObject.SetActive(true); blackOverlay.SetActive(true); associationExercise.SetActive(true);
     }
 
     public IEnumerator Level01Cinematic2()
@@ -317,66 +174,17 @@ public class Level0Controller : MonoBehaviour
         firstTime = false;
         yield return new WaitForSeconds(0.8f);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
-        /* Poner mareado a Ayka */
-        yield return new WaitForSeconds(1f); aykaDizzy = true;
-        /* AYKA DIALOGUE 3 */
+        /* Poner mareado a Ayka */ yield return new WaitForSeconds(1f); aykaDizzy = true;
         DisplayCompleteDialogueUI(); continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue3, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue3.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue3, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue3.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
-        /**/
-        /* Connie yells that opossum is going to steal a carrot from her */
-        DisplayDialogueSentence(connieDialogue5, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue5.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue5, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue5.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
-        DisplayDialogueSentence(opossumDialogue2, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue2.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue++;
-        DisplayDialogueSentence(opossumDialogue2, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue2.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        continueDialogue = false; indexForDialogue = 0;
+        // aykaDialogue3
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(aykaDialogue3));
+        while (mainThreadStopped) { yield return null; }
+        // connieDialogue5
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue5));
+        while (mainThreadStopped) { yield return null; }
+        // opossumDialogue2
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(opossumDialogue2));
+        while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI();
         /* MOVE OPOSSUM */
         yield return new WaitForSeconds(0.8f);
@@ -385,103 +193,26 @@ public class Level0Controller : MonoBehaviour
         opossumDirX = 1; while (opossumTransform.position.x < 2.6f) { yield return null; } opossumDirX = 0; opossumTransform.rotation = Quaternion.Euler(0, 0, 0);
         aykaDizzy = false;
         DisplayCompleteDialogueUI(); continueDialogue = false;
-        DisplayDialogueSentence(opossumDialogue3, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue3.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(opossumDialogue3, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue3.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue6, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue6.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue6, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue6.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(opossumDialogue4, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue4.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(opossumDialogue4, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue4.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue4, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue4.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue4, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue4.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue7, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue7.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue7, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue7.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        /***********/
+        // opossumDialogue3
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(opossumDialogue3));
+        while (mainThreadStopped) { yield return null; }
+        // connieDialogue6
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue6));
+        while (mainThreadStopped) { yield return null; }
+        // opossumDialogue4
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(opossumDialogue4));
+        while (mainThreadStopped) { yield return null; }
+        // aykaDialogue4
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(aykaDialogue4));
+        while (mainThreadStopped) { yield return null; }
+        // connieDialogue7
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue7));
+        while (mainThreadStopped) { yield return null; }
+        /**/
         HideCompleteDialogueUI();
-        yield return new WaitForSeconds(0.8f);
-        blackOverlay.SetActive(true); associationExercise.SetActive(true);
+        yield return new WaitForSeconds(0.8f); blackOverlay.SetActive(true); associationExercise.SetActive(true);
         yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(true);
         connieHelperIndicatorOverlay.SetActive(true); connieHelpIndicatorTutorial.SetActive(true);
-        // Activar canvas screens que contengan info sobre el valor y los nombres de las figuras musicales.
     }
 
     public IEnumerator Level01Cinematic3Win()
@@ -490,203 +221,41 @@ public class Level0Controller : MonoBehaviour
         yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(false);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
         yield return new WaitForSeconds(1.8f);
-        DisplayCompleteDialogueUI();
-        DisplayDialogueSentence(opossumDialogue5, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue5.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(opossumDialogue5, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue5.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(opossumDialogue5, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue5.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue5, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue5.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(opossumDialogue6, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = opossumDialogue6.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
+        DisplayCompleteDialogueUI(); continueDialogue = false;
+        // opossumDialogue5
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(opossumDialogue5));
+        while (mainThreadStopped) { yield return null; }
+        // aykaDialogue5
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(aykaDialogue5));
+        while (mainThreadStopped) { yield return null; }
+        // opossumDialogue6
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(opossumDialogue6));
+        while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI(); yield return new WaitForSeconds(1f);
         opossumNotDead = false;
         yield return new WaitForSeconds(1.5f);
-        DisplayCompleteDialogueUI();
-        DisplayDialogueSentence(aykaDialogue6, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue6.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue6, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue6.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue6, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue6.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue8, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue8.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue8, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue8.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue7, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue7.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue7, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue7.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue7, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue7.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue7, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue7.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue7, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue7.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue9, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue9.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue9, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue9.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue9, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue9.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue8, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue8.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue++; continueDialogue = false;
-        DisplayDialogueSentence(aykaDialogue8, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = aykaDialogue8.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
-        DisplayDialogueSentence(connieDialogue10, indexForDialogue);
-        while (!continueDialogue) yield return null;
-        if (isTypeSentenceCoroutineRunning)
-        {
-            continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
-            dialogueBoxSentenceBox.text = connieDialogue10.sentences[indexForDialogue];
-            while (!continueDialogue) yield return null;
-        }
-        indexForDialogue = 0; continueDialogue = false;
+        DisplayCompleteDialogueUI(); continueDialogue = false;
+        // aykaDialogue6
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(aykaDialogue6));
+        while (mainThreadStopped) { yield return null; }
+        // connieDialogue8
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue8));
+        while (mainThreadStopped) { yield return null; }
+        // aykaDialogue7
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(aykaDialogue7));
+        while (mainThreadStopped) { yield return null; }
+        // connieDialogue9
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue9));
+        while (mainThreadStopped) { yield return null; }
+        // aykaDialogue8
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(aykaDialogue8));
+        while (mainThreadStopped) { yield return null; }
+        // connieDialogue10
+        mainThreadStopped = true; StartCoroutine(ProcessDialogueObjectSentences(connieDialogue10));
+        while (mainThreadStopped) { yield return null; }
+        /**/
         HideCompleteDialogueUI();
-        totalBlackOverlay.SetActive(true);
-        yield return new WaitForSeconds(1f);
+        totalBlackOverlay.SetActive(true); yield return new WaitForSeconds(1f);
         totalBlackOverlay.GetComponent<Animator>().SetInteger("state", 1); yield return new WaitForSeconds(1.2f);
         levelCameraController.gameObject.SetActive(true);
         enemyGameObjectsArray = levelDynamicGen.GetEnemyGameObjectsArray();
@@ -719,8 +288,7 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator ActivateExerciseUI()
     {
-        yield return new WaitForSeconds(0.8f);
-        blackOverlay.SetActive(true); associationExercise.SetActive(true);
+        yield return new WaitForSeconds(0.8f); blackOverlay.SetActive(true); associationExercise.SetActive(true);
     }
 
     public IEnumerator Level01ErrorAction()
@@ -729,8 +297,7 @@ public class Level0Controller : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
         /* Poner mareado a Ayka */
-        yield return new WaitForSeconds(1f); aykaDizzy = true;
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(1f); aykaDizzy = true; yield return new WaitForSeconds(0.8f);
         // Traer componente de la zarigueya en cuestion
         EnemyController enemController = enemyGameObjectsArray[indexForEnemies].GetComponent<EnemyController>();
         Transform enemTransform = enemyGameObjectsArray[indexForEnemies].transform;
@@ -756,13 +323,12 @@ public class Level0Controller : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         // Get animator and explode opossum
         enemyGameObjectsArray[indexForEnemies].GetComponent<Animator>().SetInteger("state", 2);
-        yield return new WaitForSeconds(1.3f);
-        StartCoroutine(MoveToNextEnemy());
+        yield return new WaitForSeconds(1.3f); StartCoroutine(MoveToNextEnemy());
     }
 
     public IEnumerator SkipCoroutineCinematic(GameObject skipCinematicButton)
     {
-        firstTime = false; firstTimeExerciseTutorial = false; continueDialogue = false; indexForDialogue = 0;
+        firstTime = false; firstTimeExerciseTutorial = false; continueDialogue = false;
         skipCinematicButton.GetComponent<Button>().interactable = false;
         skipCinematicButton.GetComponent<Animator>().SetInteger("state", 1);
         HideCompleteDialogueUI();
@@ -788,6 +354,24 @@ public class Level0Controller : MonoBehaviour
     {
         GameObject gO = skipCinematicButton;
         StartCoroutine(SkipCoroutineCinematic(gO));
+    }
+
+    IEnumerator ProcessDialogueObjectSentences(Dialogue dialogue)
+    {
+        continueDialogue = false;
+        for (int i = 0; i < dialogue.sentences.Length; i++)
+        {
+            DisplayDialogueSentence(dialogue, i);
+            while (!continueDialogue) yield return null;
+            if (isTypeSentenceCoroutineRunning)
+            {
+                continueDialogue = false; StopCoroutine(typeSentenceCoroutine);
+                dialogueBoxSentenceBox.text = dialogue.sentences[i];
+                while (!continueDialogue) yield return null;
+            }
+            continueDialogue = false;
+        }
+        mainThreadStopped = false;
     }
 
     void DisplayDialogueSentence(Dialogue dialogue, int index)
@@ -889,6 +473,7 @@ public class Level0Controller : MonoBehaviour
     }
 
     public void OnContinueDialogue() { continueDialogue = true; }
+    // Creo que esta funcion la usa el slider que cuenta los enemigos que vas venciendo.
     public int GetIndexForEnemies() { return indexForEnemies; }
 
     void MoveCharactersToLimitOfCamera() 

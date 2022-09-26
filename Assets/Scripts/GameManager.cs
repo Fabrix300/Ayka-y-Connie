@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public int enemiesPerLevel;
     public int carrotLivesPerLevel;
     private float transitionsTime = 1f;
-    public GameObject loadingScreenGameObject;
+    //public GameObject loadingScreenGameObject;
 
     public GameLevel[] gameLevelList;
 
@@ -51,20 +51,30 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadSceneByNameAsynchronously(string sceneName)
     {
         GameObject levelLoader = GameObject.Find("LevelLoader");
-        if (levelLoader) { levelLoader.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start"); } //loadingScreen = levelLoader.transform.Find("LoadingScreen").gameObject;
-        yield return new WaitForSeconds(transitionsTime);
+        if (levelLoader) { levelLoader.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start"); }
+        yield return new WaitForSeconds(transitionsTime+0.1f);
+        GameObject loadingScreenGameObject = levelLoader.transform.GetChild(1).gameObject;
         if (loadingScreenGameObject) loadingScreenGameObject.SetActive(true);
 
         Slider progressBar = loadingScreenGameObject.transform.Find("ProgressBar").GetComponent<Slider>();
         TMP_Text progressText = loadingScreenGameObject.transform.Find("ProgressText").GetComponent<TMP_Text>();
+        progressBar.value = 0;
+        progressText.text = "0%";
 
         AsyncOperation loadingOperation =  SceneManager.LoadSceneAsync(sceneName);
+        loadingOperation.allowSceneActivation = false;
 
         while (!loadingOperation.isDone)
         {
+            yield return new WaitForEndOfFrame();
             float progress = Mathf.Clamp01(loadingOperation.progress / .9f);
             progressBar.value = progress;
-            progressText.text = progress * 100f + "%";
+            progressText.text = (progress * 100f).ToString("N0") + "%";
+            if (loadingOperation.progress >= 0.9f)
+            {
+                yield return new WaitForSeconds(0.5f);
+                loadingOperation.allowSceneActivation = true;
+            }
             yield return null;
         }
         AudioManager.instance.PlaySong(sceneName);

@@ -6,7 +6,7 @@ public class LoadingScreenGameManagerSetter : MonoBehaviour
 {
     private void Start()
     {
-        GameManager.instance.loadingScreenGameObject = gameObject;
+        //GameManager.instance.loadingScreenGameObject = gameObject;
         gameObject.SetActive(false);
     }
 }

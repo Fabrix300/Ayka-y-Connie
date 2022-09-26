@@ -9606,6 +9606,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2427983931946487835, guid: deb711f593091fa4f8f1cc190de70fa3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427983931946487835, guid: deb711f593091fa4f8f1cc190de70fa3, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
