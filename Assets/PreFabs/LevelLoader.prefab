@@ -124,7 +124,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -254,14 +254,13 @@ GameObject:
   - component: {fileID: 2427983932137419578}
   - component: {fileID: 2427983932137419579}
   - component: {fileID: 2427983932137419580}
-  - component: {fileID: 8844027492101836746}
   m_Layer: 0
   m_Name: LoadingScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2427983932137419582
 RectTransform:
   m_ObjectHideFlags: 0
@@ -348,18 +347,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8844027492101836746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2427983932137419583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1abe928e3844e740a54b5f2df1022de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2427983932760957626
 GameObject:
   m_ObjectHideFlags: 0

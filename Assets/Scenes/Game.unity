@@ -267,7 +267,7 @@ MonoBehaviour:
   activeLevel: 0
   enemiesPerLevel: 8
   carrotLivesPerLevel: 3
---- !u!1001 &1207895418
+--- !u!1001 &1631357018
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -329,10 +329,6 @@ PrefabInstance:
     - target: {fileID: 2427983932902006243, guid: deb711f593091fa4f8f1cc190de70fa3, type: 3}
       propertyPath: m_Name
       value: LevelLoader
-      objectReference: {fileID: 0}
-    - target: {fileID: 8844027492101836746, guid: deb711f593091fa4f8f1cc190de70fa3, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: deb711f593091fa4f8f1cc190de70fa3, type: 3}
