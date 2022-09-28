@@ -26,6 +26,7 @@ public class Level1Controller : MonoBehaviour
     [Header("Ejercicio")]
     public GameObject blackOverlay;
     public GameObject totalBlackOverlay;
+    public GameObject equivalenceExercise;
 
     [Header("General Level Properties")]
     public LevelCarrotCounter lvlCarrotCounter;
@@ -72,14 +73,17 @@ public class Level1Controller : MonoBehaviour
     {
         Debug.Log("Here goes a nice cinematic :(");
         /* JUST FOR NOW, DELETE LATER OR MOVE TO LAST CINEMATIC */
+        lvlConnieHelperButton.gameObject.SetActive(false);
+        connieTransform.position = new Vector2(aykaTransform.position.x - 1.3f, connieTransform.position.y);
+        yield return new WaitForSeconds(1f);
+        levelCameraController.gameObject.SetActive(true);
         enemyGameObjectsArray = levelDynamicGen.GetEnemyGameObjectsArray();
         StartCoroutine(MoveToNextEnemy());
-        yield return null;
     }
 
     public IEnumerator ActivateExerciseUI()
     {
-        yield return new WaitForSeconds(0.8f); blackOverlay.SetActive(true); /*associationExercise.SetActive(true);*/
+        yield return new WaitForSeconds(0.8f); blackOverlay.SetActive(true); equivalenceExercise.SetActive(true);
     }
 
     public IEnumerator MoveToNextEnemy()
@@ -115,16 +119,16 @@ public class Level1Controller : MonoBehaviour
         // Traer componente de la zarigueya en cuestion
         EnemyController enemController = enemyGameObjectsArray[indexForEnemies].GetComponent<EnemyController>();
         Transform enemTransform = enemyGameObjectsArray[indexForEnemies].transform;
-        enemController.isEnabled = true; enemController.opossumDirX = -1;
+        enemController.isEnabled = true; enemController.enemyDirX = -1;
         while (enemTransform.position.x > aykaTransform.position.x - 0.1f) { yield return null; }
-        enemController.opossumDirX = 0;
+        enemController.enemyDirX = 0;
         connieHurt = true; yield return new WaitForSeconds(0.5f); connieHurt = false;
         lvlCarrotCounter.DiminishOneCarrot(new Vector2(connieTransform.position.x + 0.8f, connieTransform.position.y)); yield return new WaitForSeconds(0.3f);
         // Mover a la zarigueya hasta el final izquierdo de la pantalla y destruirla
         float positionXCamera = mainCamera.transform.position.x;
         float widthOfCamera = mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x - positionXCamera;
-        enemController.opossumDirX = -1; while (enemTransform.position.x > (positionXCamera - widthOfCamera) - 1.4f) { yield return null; }
-        enemController.opossumDirX = 0; enemController.opossumNotDead = false;
+        enemController.enemyDirX = -1; while (enemTransform.position.x > (positionXCamera - widthOfCamera) - 1.4f) { yield return null; }
+        enemController.enemyDirX = 0; enemController.enemyNotDead = false;
         aykaDizzy = false; yield return new WaitForSeconds(0.3f);
         StartCoroutine(MoveToNextEnemy());
     }

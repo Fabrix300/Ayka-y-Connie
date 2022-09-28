@@ -5,26 +5,26 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public bool isEnabled;
-    public int opossumDirX;
-    public float opossumMovementSpeed;
-    public bool opossumNotDead;
+    public int enemyDirX;
+    public float enemyMovementSpeed;
+    public bool enemyNotDead;
 
-    private Rigidbody2D opossumRb2d;
-    private Animator opossumAnimator;
+    private Rigidbody2D enemyRb2d;
+    private Animator enemyAnimator;
 
     // Start is called before the first frame update
     void Start()
     {
-        opossumRb2d = GetComponent<Rigidbody2D>();
-        opossumAnimator = GetComponent<Animator>();
+        enemyRb2d = GetComponent<Rigidbody2D>();
+        enemyAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
-        if (isEnabled && opossumRb2d)
+        if (isEnabled && enemyRb2d)
         {
-            opossumRb2d.velocity = new Vector2(opossumDirX * opossumMovementSpeed * Time.fixedDeltaTime, opossumRb2d.velocity.y);
+            enemyRb2d.velocity = new Vector2(enemyDirX * enemyMovementSpeed * Time.fixedDeltaTime, enemyRb2d.velocity.y);
             OpossumUpdateAnimation();
         }
         
@@ -33,13 +33,13 @@ public class EnemyController : MonoBehaviour
     void OpossumUpdateAnimation()
     {
         int state;
-        if (opossumNotDead)
+        if (enemyNotDead)
         {
-            if (opossumDirX > 0f) { transform.rotation = Quaternion.Euler(0, 180, 0); state = 1; }
-            else if (opossumDirX < 0f) { transform.rotation = Quaternion.Euler(0, 0, 0); state = 1; }
+            if (enemyDirX > 0f) { transform.rotation = Quaternion.Euler(0, 180, 0); state = 1; }
+            else if (enemyDirX < 0f) { transform.rotation = Quaternion.Euler(0, 0, 0); state = 1; }
             else state = 0;
         }
         else state = 2;
-        opossumAnimator.SetInteger("state", state);
+        enemyAnimator.SetInteger("state", state);
     }
 }

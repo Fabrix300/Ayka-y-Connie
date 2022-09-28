@@ -10,7 +10,7 @@ public class LevelDynamicGenerator : MonoBehaviour
     public Transform enemyGOParent;
     public float startingPoint;
     public float separationOffset;
-    public float enemySeparationOffset;
+    public float enemyStartingPoint;
 
     private int totalNumberOfElements;
     private GameObject[] enemyGameObjectsArray;
@@ -31,7 +31,8 @@ public class LevelDynamicGenerator : MonoBehaviour
             terrainGO.transform.position = new Vector2(startingPoint + (i*separationOffset), 0f);
             //instanciar enemigo
             GameObject enemyGO = Instantiate(enemyPreFab, enemyGOParent);
-            float positionX = startingPoint + enemySeparationOffset + (i * separationOffset);
+            //float positionX = enemyStartingPoint + enemySeparationOffset +(i * separationOffset);
+            float positionX = enemyStartingPoint + (i * separationOffset);
             enemyGO.transform.position = new Vector2(positionX, enemyPreFab.transform.position.y);
             enemyGameObjectsArray[i] = enemyGO;
         }

@@ -244,16 +244,16 @@ public class Level0Controller : MonoBehaviour
         // Traer componente de la zarigueya en cuestion
         EnemyController enemController = enemyGameObjectsArray[indexForEnemies].GetComponent<EnemyController>();
         Transform enemTransform = enemyGameObjectsArray[indexForEnemies].transform;
-        enemController.isEnabled = true; enemController.opossumDirX = -1;
+        enemController.isEnabled = true; enemController.enemyDirX = -1;
         while (enemTransform.position.x > aykaTransform.position.x - 0.1f) { yield return null; }
-        enemController.opossumDirX = 0;
+        enemController.enemyDirX = 0;
         connieHurt = true; yield return new WaitForSeconds(0.5f); connieHurt = false;
         lvlCarrotCounter.DiminishOneCarrot(new Vector2(connieTransform.position.x + 0.8f, connieTransform.position.y)); yield return new WaitForSeconds(0.3f);
         // Mover a la zarigueya hasta el final izquierdo de la pantalla y destruirla (TODO)
         float positionXCamera = mainCamera.transform.position.x;
         float widthOfCamera =  mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x - positionXCamera;
-        enemController.opossumDirX = -1; while (enemTransform.position.x > (positionXCamera - widthOfCamera) - 1.4f) { yield return null; }
-        enemController.opossumDirX = 0; enemController.opossumNotDead = false;
+        enemController.enemyDirX = -1; while (enemTransform.position.x > (positionXCamera - widthOfCamera) - 1.4f) { yield return null; }
+        enemController.enemyDirX = 0; enemController.enemyNotDead = false;
         aykaDizzy = false; yield return new WaitForSeconds(0.3f);
         StartCoroutine(MoveToNextEnemy());
     }
