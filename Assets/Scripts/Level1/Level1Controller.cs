@@ -29,12 +29,15 @@ public class Level1Controller : MonoBehaviour
     public GameObject equivalenceExercise;
 
     [Header("General Level Properties")]
+    [HideInInspector] public bool firstTime = false;
+    [HideInInspector] public bool firstTimeExerciseTutorial = false;
     public LevelCarrotCounter lvlCarrotCounter;
     public Button lvlPauseButton;
     public Button lvlConnieHelperButton;
     public LevelCameraController levelCameraController;
     public EndScreensController endScreensController;
     public LevelProgressBarController lvlProgressBarController;
+    public int timesConnieHelperButton;
     private LevelDynamicGenerator levelDynamicGen;
     private GameObject[] enemyGameObjectsArray;
     private int indexForEnemies = -1;
@@ -84,6 +87,10 @@ public class Level1Controller : MonoBehaviour
     public IEnumerator ActivateExerciseUI()
     {
         yield return new WaitForSeconds(0.8f); blackOverlay.SetActive(true); equivalenceExercise.SetActive(true);
+        if (indexForEnemies < timesConnieHelperButton)
+        {
+            lvlConnieHelperButton.gameObject.SetActive(true);
+        }
     }
 
     public IEnumerator MoveToNextEnemy()
@@ -113,7 +120,8 @@ public class Level1Controller : MonoBehaviour
     {
         // ocultar el ui de juego y hacer que la zarigueya robe una zanahoria
         yield return new WaitForSeconds(0.8f);
-        blackOverlay.GetComponent<Animator>().SetInteger("state", 1); /*associationExercise.GetComponent<Animator>().SetInteger("state", 1);*/
+        blackOverlay.GetComponent<Animator>().SetInteger("state", 1); equivalenceExercise.GetComponent<Animator>().SetInteger("state", 1);
+        if (lvlConnieHelperButton.gameObject.activeInHierarchy) { lvlConnieHelperButton.gameObject.SetActive(false);  } 
         /* Poner mareado a Ayka */
         yield return new WaitForSeconds(1f); aykaDizzy = true; yield return new WaitForSeconds(0.8f);
         // Traer componente de la zarigueya en cuestion
@@ -137,7 +145,8 @@ public class Level1Controller : MonoBehaviour
     {
         // ocultar el ui de juego y hacer que la zarigueya explote
         yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(false);
-        blackOverlay.GetComponent<Animator>().SetInteger("state", 1); /*associationExercise.GetComponent<Animator>().SetInteger("state", 1);*/
+        blackOverlay.GetComponent<Animator>().SetInteger("state", 1); equivalenceExercise.GetComponent<Animator>().SetInteger("state", 1);
+        if (lvlConnieHelperButton.gameObject.activeInHierarchy) { lvlConnieHelperButton.gameObject.SetActive(false); }
         yield return new WaitForSeconds(1.5f);
         // Get animator and explode opossum
         enemyGameObjectsArray[indexForEnemies].GetComponent<Animator>().SetInteger("state", 2);
