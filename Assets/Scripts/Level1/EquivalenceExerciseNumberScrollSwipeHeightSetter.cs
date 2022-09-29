@@ -20,7 +20,7 @@ public class EquivalenceExerciseNumberScrollSwipeHeightSetter : MonoBehaviour
     public IEnumerator Testing()
     {
         yield return new WaitForEndOfFrame();
-        Debug.Log(RectTransformUtility.CalculateRelativeRectTransformBounds(transformParent, transformTarget).size.y);
+        //Debug.Log(RectTransformUtility.CalculateRelativeRectTransformBounds(transformParent, transformTarget).size.y);
         rectSelf.sizeDelta = new Vector2(rectSelf.sizeDelta.x, RectTransformUtility.CalculateRelativeRectTransformBounds(transformParent, transformTarget).size.y);
     }
 }

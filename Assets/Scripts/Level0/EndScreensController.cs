@@ -44,17 +44,23 @@ public class EndScreensController : MonoBehaviour
         {
             case 1:
                 {
-                    winMessageText.text = "¡Puedes mejorar!";
+                    string[] oneCarrotMessages = new string[3] 
+                    { "¡Puedes hacerlo mejor!", "¡Puedes mejorar!", "¡Siempre puedes reintentarlo!" };
+                    winMessageText.text = oneCarrotMessages[Random.Range(0, oneCarrotMessages.Length-1)];
                     break;
                 }
             case 2:
                 {
-                    winMessageText.text = "¡Bien!";
+                    string[] twoCarrotsMessages = new string[4]
+                    { "¡Bien!", "¡Casi glorioso!", "¡Casi perfecto!", "¡Vas por buen camino!" };
+                    winMessageText.text = twoCarrotsMessages[Random.Range(0, twoCarrotsMessages.Length - 1)];
                     break;
                 }
             case 3:
                 {
-                    winMessageText.text = "¡Excelente!";
+                    string[] twoCarrotsMessages = new string[5]
+                    { "¡Excelente!", "¡Glorioso!", "¡Que pro!", "¡Magnífico!", "¡Increíble!" };
+                    winMessageText.text = twoCarrotsMessages[Random.Range(0, twoCarrotsMessages.Length - 1)];
                     break;
                 }
         }

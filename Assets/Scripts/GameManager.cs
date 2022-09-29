@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public int activeLevel;
     public int enemiesPerLevel;
     public int carrotLivesPerLevel;
-    private float transitionsTime = 1f;
+    private readonly float transitionsTime = 1f;
     //public GameObject loadingScreenGameObject;
 
     public GameLevel[] gameLevelList;
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         GameObject levelLoader = GameObject.Find("LevelLoader");
         if (!levelLoader) { Debug.LogWarning("No 'levelLoader' game object available in current scene."); yield break; }
         levelLoader.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Start");
-        yield return new WaitForSeconds(transitionsTime+0.1f);
+        yield return new WaitForSeconds(transitionsTime);
         GameObject loadingScreenGameObject = levelLoader.transform.GetChild(1).gameObject;
         loadingScreenGameObject.SetActive(true);
 

@@ -76,7 +76,7 @@ public class Level1Controller : MonoBehaviour
     {
         Debug.Log("Here goes a nice cinematic :(");
         /* JUST FOR NOW, DELETE LATER OR MOVE TO LAST CINEMATIC */
-        lvlConnieHelperButton.gameObject.SetActive(false);
+        lvlConnieHelperButton.gameObject.SetActive(false); blackOverlay.SetActive(false); equivalenceExercise.SetActive(false);
         connieTransform.position = new Vector2(aykaTransform.position.x - 1.3f, connieTransform.position.y);
         yield return new WaitForSeconds(1f);
         levelCameraController.gameObject.SetActive(true);
