@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Application.targetFrameRate = 60;
         if (instance != null) { Destroy(gameObject); return; }
         instance = this;
         DontDestroyOnLoad(gameObject);
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour
         gameLevelList = new GameLevel[2]
         {
             new GameLevel("Nivel 0", "Introducción", carrotLivesPerLevel, carrotLivesPerLevel, true, false),
-            new GameLevel("Nivel 1", "Equivalencias", carrotLivesPerLevel, carrotLivesPerLevel, true, false)
+            new GameLevel("Nivel 1", "Equivalencias", carrotLivesPerLevel, carrotLivesPerLevel, false, false)
         };
     }
 

@@ -55,6 +55,12 @@ public class Level1Controller : MonoBehaviour
         levelDynamicGen = GetComponent<LevelDynamicGenerator>();
         aykaVoice = AudioManager.instance.characterVoices[0].source;
         connieVoice = AudioManager.instance.characterVoices[1].source;
+        /* Events */
+        EquivalenceExercise equivalenceExerciseComponent = equivalenceExercise.GetComponent<EquivalenceExercise>();
+        //equivalenceExerciseComponent.OnErrorTutorial += StartSecondCinematic;
+        //equivalenceExerciseComponent.OnWinTutorial += StartThirdCinematic;
+        equivalenceExerciseComponent.OnError += StartErrorCinematic;
+        equivalenceExerciseComponent.OnWin += StartWinCinematic;
         StartCoroutine(Level1Cinematic1());
     }
 
@@ -77,8 +83,14 @@ public class Level1Controller : MonoBehaviour
         Debug.Log("Here goes a nice cinematic :(");
         /* JUST FOR NOW, DELETE LATER OR MOVE TO LAST CINEMATIC */
         lvlConnieHelperButton.gameObject.SetActive(false); blackOverlay.SetActive(false); equivalenceExercise.SetActive(false);
+        totalBlackOverlay.SetActive(false);
+        aykaGameObject.GetComponent<SpriteRenderer>().flipX = true;
+        yield return new WaitForSeconds(1.5f);
+        // Move connie to ayka
+        connieDirX = 1; while(connieTransform.position.x < aykaTransform.position.x - 1.3f) { yield return null; }
+        connieDirX = 0; aykaGameObject.GetComponent<SpriteRenderer>().flipX = false;
         connieTransform.position = new Vector2(aykaTransform.position.x - 1.3f, connieTransform.position.y);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.6f);
         levelCameraController.gameObject.SetActive(true);
         enemyGameObjectsArray = levelDynamicGen.GetEnemyGameObjectsArray();
         StartCoroutine(MoveToNextEnemy());
@@ -118,13 +130,13 @@ public class Level1Controller : MonoBehaviour
 
     public IEnumerator Level01ErrorAction()
     {
-        // ocultar el ui de juego y hacer que la zarigueya robe una zanahoria
+        // ocultar el ui de juego y hacer que el enemigo robe una zanahoria
         yield return new WaitForSeconds(0.8f);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); equivalenceExercise.GetComponent<Animator>().SetInteger("state", 1);
         if (lvlConnieHelperButton.gameObject.activeInHierarchy) { lvlConnieHelperButton.gameObject.SetActive(false);  } 
         /* Poner mareado a Ayka */
         yield return new WaitForSeconds(1f); aykaDizzy = true; yield return new WaitForSeconds(0.8f);
-        // Traer componente de la zarigueya en cuestion
+        // Traer componente del enemigo en cuestion
         EnemyController enemController = enemyGameObjectsArray[indexForEnemies].GetComponent<EnemyController>();
         Transform enemTransform = enemyGameObjectsArray[indexForEnemies].transform;
         enemController.isEnabled = true; enemController.enemyDirX = -1;
@@ -143,14 +155,14 @@ public class Level1Controller : MonoBehaviour
 
     public IEnumerator Level01WinAction()
     {
-        // ocultar el ui de juego y hacer que la zarigueya explote
-        yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(false);
+        // ocultar el ui de juego
+        yield return new WaitForSeconds(0.8f); lvlConnieHelperButton.gameObject.SetActive(false);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); equivalenceExercise.GetComponent<Animator>().SetInteger("state", 1);
         if (lvlConnieHelperButton.gameObject.activeInHierarchy) { lvlConnieHelperButton.gameObject.SetActive(false); }
         yield return new WaitForSeconds(1.5f);
-        // Get animator and explode opossum
+        // Get animator and explode enemy
         enemyGameObjectsArray[indexForEnemies].GetComponent<Animator>().SetInteger("state", 2);
-        yield return new WaitForSeconds(1.3f); StartCoroutine(MoveToNextEnemy());
+        yield return new WaitForSeconds(1.2f); StartCoroutine(MoveToNextEnemy());
     }
 
     void StartErrorCinematic() { StartCoroutine(Level01ErrorAction()); }

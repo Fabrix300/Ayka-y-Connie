@@ -182,5 +182,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isEnabled: 0
   enemyDirX: 0
-  enemyMovementSpeed: 0
-  enemyNotDead: 0
+  enemyMovementSpeed: 200
+  enemyNotDead: 1

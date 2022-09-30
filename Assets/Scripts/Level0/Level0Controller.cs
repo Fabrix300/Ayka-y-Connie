@@ -62,6 +62,7 @@ public class Level0Controller : MonoBehaviour
     public EndScreensController endScreensController;
     public LevelProgressBarController lvlProgressBarController;
     public GameObject skipCinematicButton;
+    public int timesConnieHelperButton;
     private LevelDynamicGenerator levelDynamicGen;
     private GameObject[] enemyGameObjectsArray;
     private int indexForEnemies = -1;
@@ -232,6 +233,10 @@ public class Level0Controller : MonoBehaviour
     public IEnumerator ActivateExerciseUI()
     {
         yield return new WaitForSeconds(0.8f); blackOverlay.SetActive(true); associationExercise.SetActive(true);
+        if (indexForEnemies < timesConnieHelperButton)
+        {
+            lvlConnieHelperButton.gameObject.SetActive(true);
+        }
     }
 
     public IEnumerator Level01ErrorAction()
@@ -239,6 +244,7 @@ public class Level0Controller : MonoBehaviour
         // ocultar el ui de juego y hacer que la zarigueya robe una zanahoria
         yield return new WaitForSeconds(0.8f);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
+        if (lvlConnieHelperButton.gameObject.activeInHierarchy) { lvlConnieHelperButton.gameObject.SetActive(false); }
         /* Poner mareado a Ayka */
         yield return new WaitForSeconds(1f); aykaDizzy = true; yield return new WaitForSeconds(0.8f);
         // Traer componente de la zarigueya en cuestion
@@ -260,13 +266,14 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator Level01WinAction()
     {
-        // ocultar el ui de juego y hacer que la zarigueya explote
+        // ocultar el ui de juego
         yield return new WaitForSeconds(0.5f); lvlConnieHelperButton.gameObject.SetActive(false);
         blackOverlay.GetComponent<Animator>().SetInteger("state", 1); associationExercise.GetComponent<Animator>().SetInteger("state", 1);
+        if (lvlConnieHelperButton.gameObject.activeInHierarchy) { lvlConnieHelperButton.gameObject.SetActive(false); }
         yield return new WaitForSeconds(1.5f);
-        // Get animator and explode opossum
+        // Get animator and explode enemy
         enemyGameObjectsArray[indexForEnemies].GetComponent<Animator>().SetInteger("state", 2);
-        yield return new WaitForSeconds(1.3f); StartCoroutine(MoveToNextEnemy());
+        yield return new WaitForSeconds(1.2f); StartCoroutine(MoveToNextEnemy());
     }
 
     public IEnumerator SkipCoroutineCinematic(GameObject skipCinematicButton)
