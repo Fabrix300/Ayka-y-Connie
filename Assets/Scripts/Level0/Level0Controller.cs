@@ -71,6 +71,9 @@ public class Level0Controller : MonoBehaviour
     private bool continueDialogue = false;
     //private int indexForDialogue = 0;
     private IEnumerator typeSentenceCoroutine;
+    private IEnumerator level01Cinematic;
+    private IEnumerator processDialogueGroup;
+    private IEnumerator processDialogueObjectSentences;
     private bool isTypeSentenceCoroutineRunning;
     private bool mainThreadStopped = false;
     private bool secondThreadStopped = false;
@@ -93,7 +96,8 @@ public class Level0Controller : MonoBehaviour
         associationExerciseComponent.OnWinTutorial += StartThirdCinematic;
         associationExerciseComponent.OnError += StartErrorCinematic;
         associationExerciseComponent.OnWin += StartWinCinematic;
-        StartCoroutine(Level01Cinematic());
+        level01Cinematic = Level01Cinematic();
+        StartCoroutine(level01Cinematic);
     }
 
     private void FixedUpdate()
@@ -124,7 +128,8 @@ public class Level0Controller : MonoBehaviour
         if (GameManager.instance.gameLevelList[GameManager.instance.activeLevel].hasBeenPlayed) skipCinematicButton.SetActive(true);
         /* STARTING AYKA MONOLOGUE */
         DisplayCompleteDialogueUI();
-        mainThreadStopped = true; StartCoroutine(ProcessDialogueGroup(dialogueGroup1));
+        mainThreadStopped = true;
+        processDialogueGroup = ProcessDialogueGroup(dialogueGroup1); StartCoroutine(processDialogueGroup);
         while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI();
         // CONNIE APPEARS
@@ -133,7 +138,8 @@ public class Level0Controller : MonoBehaviour
         connieDirX = 0; connieRb2d.AddForce(Vector2.up * 200);
         /* STARTING dialogueGroup2 */
         DisplayCompleteDialogueUI(); 
-        mainThreadStopped = true; StartCoroutine(ProcessDialogueGroup(dialogueGroup2));
+        mainThreadStopped = true; 
+        processDialogueGroup = ProcessDialogueGroup(dialogueGroup2); StartCoroutine(processDialogueGroup);
         while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI();
         /* HIDING SKIP CINEMATIC BUTTON */
@@ -148,7 +154,8 @@ public class Level0Controller : MonoBehaviour
         connieDirX = 0; connieTransform.rotation = Quaternion.Euler(0, 0, 0);
         /* dialogueGroup3  */
         DisplayCompleteDialogueUI();
-        mainThreadStopped = true; StartCoroutine(ProcessDialogueGroup(dialogueGroup3));
+        mainThreadStopped = true;
+        processDialogueGroup = ProcessDialogueGroup(dialogueGroup3); StartCoroutine(processDialogueGroup);
         while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI(); yield return new WaitForSeconds(0.8f); lvlCarrotCounter.gameObject.SetActive(true);
         lvlPauseButton.gameObject.SetActive(true); blackOverlay.SetActive(true); associationExercise.SetActive(true);
@@ -162,7 +169,8 @@ public class Level0Controller : MonoBehaviour
         /* Poner mareado a Ayka */ yield return new WaitForSeconds(1f); aykaDizzy = true;
         DisplayCompleteDialogueUI();
         // dialogueGroup4
-        mainThreadStopped = true; StartCoroutine(ProcessDialogueGroup(dialogueGroup4));
+        mainThreadStopped = true; 
+        processDialogueGroup = ProcessDialogueGroup(dialogueGroup4); StartCoroutine(processDialogueGroup);
         while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI();
         /* MOVE OPOSSUM */
@@ -173,7 +181,8 @@ public class Level0Controller : MonoBehaviour
         aykaDizzy = false;
         DisplayCompleteDialogueUI();
         // dialogueGroup5
-        mainThreadStopped = true; StartCoroutine(ProcessDialogueGroup(dialogueGroup5));
+        mainThreadStopped = true;
+        processDialogueGroup = ProcessDialogueGroup(dialogueGroup5); StartCoroutine(processDialogueGroup);
         while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI();
         yield return new WaitForSeconds(0.8f); blackOverlay.SetActive(true); associationExercise.SetActive(true);
@@ -189,14 +198,16 @@ public class Level0Controller : MonoBehaviour
         yield return new WaitForSeconds(1.8f);
         DisplayCompleteDialogueUI();
         // dialogueGroup6
-        mainThreadStopped = true; StartCoroutine(ProcessDialogueGroup(dialogueGroup6));
+        mainThreadStopped = true;
+        processDialogueGroup = ProcessDialogueGroup(dialogueGroup6); StartCoroutine(processDialogueGroup);
         while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI(); yield return new WaitForSeconds(1f);
         opossumNotDead = false;
         yield return new WaitForSeconds(1.5f);
         DisplayCompleteDialogueUI(); continueDialogue = false;
         // dialogueGroup7
-        mainThreadStopped = true; StartCoroutine(ProcessDialogueGroup(dialogueGroup7));
+        mainThreadStopped = true; 
+        processDialogueGroup = ProcessDialogueGroup(dialogueGroup7); StartCoroutine(processDialogueGroup);
         while (mainThreadStopped) { yield return null; }
         HideCompleteDialogueUI();
         totalBlackOverlay.SetActive(true); yield return new WaitForSeconds(1f);
@@ -278,10 +289,17 @@ public class Level0Controller : MonoBehaviour
 
     public IEnumerator SkipCoroutineCinematic(GameObject skipCinematicButton)
     {
-        firstTime = false; firstTimeExerciseTutorial = false; continueDialogue = false;
+        /*Stop the coroutines*/
+        StopCoroutine(level01Cinematic); StopCoroutine(typeSentenceCoroutine); StopCoroutine(processDialogueObjectSentences);
+        StopCoroutine(processDialogueGroup);
+        HideCompleteDialogueUI();
         skipCinematicButton.GetComponent<Button>().interactable = false;
         skipCinematicButton.GetComponent<Animator>().SetInteger("state", 1);
-        HideCompleteDialogueUI();
+        firstTime = false; firstTimeExerciseTutorial = false; continueDialogue = false;
+        /* setting everithing back to normal */
+        mainThreadStopped = false; secondThreadStopped = false;
+        aykaDirX = 0; aykaDizzy = false; connieDirX = 0; connieHurt = false; opossumDirX = 0;
+        /* ********************************* */
         totalBlackOverlay.SetActive(true);
         yield return new WaitForSeconds(1f);
         lvlCarrotCounter.gameObject.SetActive(true); lvlPauseButton.gameObject.SetActive(true);
@@ -309,7 +327,8 @@ public class Level0Controller : MonoBehaviour
         for (int i = 0; i < dialogueGroup.Length; i++)
         {
             continueDialogue = false; secondThreadStopped = true;
-            StartCoroutine(ProcessDialogueObjectSentences(dialogueGroup[i]));
+            processDialogueObjectSentences = ProcessDialogueObjectSentences(dialogueGroup[i]);
+            StartCoroutine(processDialogueObjectSentences);
             while (secondThreadStopped) { yield return null; }
         }
         mainThreadStopped = false;
@@ -427,8 +446,8 @@ public class Level0Controller : MonoBehaviour
     void HideCompleteDialogueUI()
     {
         dialogueBoxAnimator.SetInteger("state", 2);
-        continueDialogueButtonAnimator.gameObject.GetComponent<Button>().interactable = false;
         continueDialogueButtonAnimator.SetInteger("state", 2);
+        continueDialogueButtonAnimator.gameObject.GetComponent<Button>().interactable = false;
     }
 
     public void OnContinueDialogue() { continueDialogue = true; }
@@ -436,7 +455,7 @@ public class Level0Controller : MonoBehaviour
     public int GetIndexForEnemies() { return indexForEnemies; }
 
     void MoveCharactersToLimitOfCamera() 
-    { 
+    {
         connieTransform.position = new Vector2((mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 1f, connieRb2d.gameObject.transform.position.y);
         opossumTransform.position = new Vector2((mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x) + 2f, opossumRb2d.gameObject.transform.position.y);
     }
