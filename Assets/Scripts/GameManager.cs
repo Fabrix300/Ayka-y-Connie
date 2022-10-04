@@ -49,10 +49,11 @@ public class GameManager : MonoBehaviour
         else
         {
             //Debug.Log("No hay datos");
-            gameLevelList = new GameLevel[2]
+            gameLevelList = new GameLevel[3]
             {
                 new GameLevel("Nivel 0", "Introducción", carrotLivesPerLevel, carrotLivesPerLevel, true, false),
-                new GameLevel("Nivel 1", "Equivalencias", carrotLivesPerLevel, carrotLivesPerLevel, false, false)
+                new GameLevel("Nivel 1", "Equivalencias", carrotLivesPerLevel, carrotLivesPerLevel, false, false),
+                new GameLevel("Nivel 2", "Sonidos", carrotLivesPerLevel, carrotLivesPerLevel, false, false)
             };
         }
     }
