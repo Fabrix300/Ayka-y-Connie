@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,10 +14,12 @@ public class GameManager : MonoBehaviour
     public int activeLevel;
     public int enemiesPerLevel;
     public int carrotLivesPerLevel;
-    private readonly float transitionsTime = 1f;
-    //public GameObject loadingScreenGameObject;
+    public string persistentPath;
 
     public GameLevel[] gameLevelList;
+
+    private readonly float transitionsTime = 1f;
+    //public GameObject loadingScreenGameObject;
 
     private void Awake()
     {
@@ -24,24 +27,34 @@ public class GameManager : MonoBehaviour
         if (instance != null) { Destroy(gameObject); return; }
         instance = this;
         DontDestroyOnLoad(gameObject);
-        //FeedGameLevelList();
+        persistentPath = Application.persistentDataPath + Path.AltDirectorySeparatorChar + "saveData.json";
+        FeedGameLevelList();
     }
 
     private void Start()
     {
-        FeedGameLevelList();
+        //FeedGameLevelList();
         if (isFirstTimePlaying) { LoadSceneByName("Level0"); }
         else { LoadSceneByName("GameMap"); }
     }
 
     void FeedGameLevelList()
     {
-        // if game doesnt have saved info...
-        gameLevelList = new GameLevel[2]
+        // if game does have saved info...
+        if (System.IO.File.Exists(persistentPath))
         {
-            new GameLevel("Nivel 0", "Introducción", carrotLivesPerLevel, carrotLivesPerLevel, true, false),
-            new GameLevel("Nivel 1", "Equivalencias", carrotLivesPerLevel, carrotLivesPerLevel, false, false)
-        };
+            //Debug.Log("Hay datos");
+            LoadData();
+        }
+        else
+        {
+            //Debug.Log("No hay datos");
+            gameLevelList = new GameLevel[2]
+            {
+                new GameLevel("Nivel 0", "Introducción", carrotLivesPerLevel, carrotLivesPerLevel, true, false),
+                new GameLevel("Nivel 1", "Equivalencias", carrotLivesPerLevel, carrotLivesPerLevel, false, false)
+            };
+        }
     }
 
     public void LoadSceneByName(string sceneName)
@@ -86,5 +99,22 @@ public class GameManager : MonoBehaviour
     {
         //if (gameLevelList[activeLevel].unlocked) StartCoroutine(LoadSceneByNameAsynchronously("Level" + activeLevel));
         StartCoroutine(LoadSceneByNameAsynchronously("Level" + activeLevel));
+    }
+
+    public void LoadData()
+    {
+        using StreamReader rd = new StreamReader(persistentPath);
+        string json = rd.ReadToEnd();
+
+        gameLevelList = JsonUtility.FromJson<SaveDataObj>(json).gameLevelList;
+    }
+
+    public void SaveData()
+    {
+        SaveDataObj sDO = new(gameLevelList);
+        string json = JsonUtility.ToJson(sDO);
+        File.Delete(persistentPath);
+        using StreamWriter writer = new StreamWriter(persistentPath);
+        writer.Write(json);
     }
 }

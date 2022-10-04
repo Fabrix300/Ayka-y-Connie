@@ -14,9 +14,12 @@ public class EquivalenceExercise : MonoBehaviour
     public event Action OnWinTutorial;
 
     [Header("Exercise UI Elements")]
+    public TMP_Text askedMusicalFigureTextElementHelper;
     public TMP_Text askedMusicalFigureTextElement;
     public Image askedMusicalFigureImageElement;
+    public TMP_Text answerMusicalFigureTextElementHelper;
     public Image answerMusicalFigureImageElement;
+    public TMP_Text equivalenceTextExerciseConnector;
     public Button checkButton;
     public TMP_Text checkButtonText;
     public Color correctColor;
@@ -26,8 +29,10 @@ public class EquivalenceExercise : MonoBehaviour
     private int firstMusicalFigure = 0;
     private int secondMusicalFigure = 0;
     private int askedValueFromMusicalFigure = 0;
-    private readonly string[] congratsMessages = new string[4] 
-    { "¡Genial!", "¡Buen trabajo!", "¡Así se hace!", "¡Sigue así!" };
+    private readonly string[] numberValuesTexts = new string[9]
+    {
+        "Una", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve"
+    };
 
     private void OnEnable()
     {
@@ -41,9 +46,26 @@ public class EquivalenceExercise : MonoBehaviour
         /* Get the second musical figure and ensure that it is divisible */
         secondMusicalFigure = ChooseSecondMusicalFigure();
         /* Set values in ui elements */
+        ProcessMusicalFigureTextElementHelper(
+            askedMusicalFigureTextElementHelper,
+            musicalFiguresInfoArray[firstMusicalFigure],
+            askedValueFromMusicalFigure
+            );
+        if (askedValueFromMusicalFigure > 1) { equivalenceTextExerciseConnector.text = "equivalen a..."; }
+        else { equivalenceTextExerciseConnector.text = "equivale a..."; }
         askedMusicalFigureTextElement.text = askedValueFromMusicalFigure.ToString();
         askedMusicalFigureImageElement.sprite = musicalFiguresInfoArray[firstMusicalFigure].musicalFigureImage;
         answerMusicalFigureImageElement.sprite = musicalFiguresInfoArray[secondMusicalFigure].musicalFigureImage;
+    }
+
+    private void Update()
+    {
+        int valueSelected = int.Parse(valueSwipeSelector.swipeSelectorValues[Mathf.Abs(valueSwipeSelector.GetSelected() - (valueSwipeSelector.swipeSelectorValues.Length - 1))].text);
+        ProcessMusicalFigureTextElementHelper(
+            answerMusicalFigureTextElementHelper,
+            musicalFiguresInfoArray[secondMusicalFigure],
+            valueSelected
+            );
     }
 
     public void CheckAnswer()
@@ -54,7 +76,7 @@ public class EquivalenceExercise : MonoBehaviour
         ColorBlock cB = checkButton.colors;
         if (answerValue == askedValue)
         {
-            checkButtonText.text = congratsMessages[UnityEngine.Random.Range(0, congratsMessages.Length)];
+            checkButtonText.text = "Correcto";
             checkButtonText.color = new Color(0f, 0.3f, 0f, 1f);
             cB.disabledColor = correctColor;
             checkButton.colors = cB;
@@ -91,5 +113,12 @@ public class EquivalenceExercise : MonoBehaviour
             }
         }
         return l[UnityEngine.Random.Range(0, l.Count)];
+    }
+
+    void ProcessMusicalFigureTextElementHelper(TMP_Text textToUpdate, MusicalFigureInfo musicalFigureInfo, int value)
+    {
+        string number = numberValuesTexts[value-1];
+        if (value == 1) { textToUpdate.text = "(" + number + " " + musicalFigureInfo.musicalFigureName + ")"; }
+        else { textToUpdate.text = "(" + number + " " + musicalFigureInfo.musicalFigureName + "s)"; }
     }
 }

@@ -74,29 +74,7 @@ public class EndScreensController : MonoBehaviour
         loseScreen.SetActive(true);
     }
 
-    public void WinGoBackToMapAction()
-    {
-        GameLevel gL = gameManager.gameLevelList[gameManager.activeLevel];
-        if(gL.hasBeenPlayed)
-        {
-            if (lvlCarrotCounter.GetCurrentCarrots() > gL.carrotsLeft)
-            {
-                gL.carrotsLeft = lvlCarrotCounter.GetCurrentCarrots();
-            }
-        }
-        else
-        {
-            gL.hasBeenPlayed = true;
-            gL.carrotsLeft = lvlCarrotCounter.GetCurrentCarrots();
-        }        
-        if (gameManager.activeLevel + 1 < gameManager.gameLevelList.Length)
-        {
-            gameManager.gameLevelList[gameManager.activeLevel + 1].unlocked = true;
-        }
-        gameManager.LoadSceneByName("GameMap");
-    }
-
-    public void WinRestartAction()
+    public void WinSaveGameState()
     {
         GameLevel gL = gameManager.gameLevelList[gameManager.activeLevel];
         if (gL.hasBeenPlayed)
@@ -115,22 +93,19 @@ public class EndScreensController : MonoBehaviour
         {
             gameManager.gameLevelList[gameManager.activeLevel + 1].unlocked = true;
         }
-        gameManager.LoadActiveLevel();
+        gameManager.SaveData();
     }
 
-    public void LoseGoBackToMapAction()
+    public void LoseSaveGameState()
     {
         GameLevel gL = gameManager.gameLevelList[gameManager.activeLevel];
         gL.carrotsLeft = lvlCarrotCounter.GetCurrentCarrots();
         gL.hasBeenPlayed = true;
-        gameManager.LoadSceneByName("GameMap");
+        gameManager.SaveData();
     }
 
-    public void LoseRestartAction()
-    {
-        GameLevel gL = gameManager.gameLevelList[gameManager.activeLevel];
-        gL.carrotsLeft = lvlCarrotCounter.GetCurrentCarrots();
-        gL.hasBeenPlayed = true;
-        gameManager.LoadActiveLevel();
-    }
+    public void WinGoBackToMapAction() { gameManager.LoadSceneByName("GameMap"); }
+    public void WinRestartAction() { gameManager.LoadActiveLevel(); }
+    public void LoseGoBackToMapAction() { gameManager.LoadSceneByName("GameMap"); }
+    public void LoseRestartAction() { gameManager.LoadActiveLevel(); }
 }

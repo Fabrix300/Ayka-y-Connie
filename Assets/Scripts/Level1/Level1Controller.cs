@@ -109,11 +109,13 @@ public class Level1Controller : MonoBehaviour
     {
         indexForEnemies++;
         int currentCarrots = lvlCarrotCounter.GetCurrentCarrots();
-        if (currentCarrots == 0) { endScreensController.ShowLoseScreen(); }
+        if (currentCarrots == 0)
+        { endScreensController.ShowLoseScreen(); endScreensController.LoseSaveGameState(); }
         else if (indexForEnemies == enemyGameObjectsArray.Length)
         {
             lvlProgressBarController.AppearLevelProgressBarAndUpdate(indexForEnemies);
             yield return new WaitForSeconds(1.2f); endScreensController.ShowWinScreen();
+            endScreensController.WinSaveGameState();
         }
         else
         {

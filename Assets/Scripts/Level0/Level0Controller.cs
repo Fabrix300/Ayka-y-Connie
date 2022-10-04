@@ -222,11 +222,13 @@ public class Level0Controller : MonoBehaviour
         // chequear si es el ultimo index del array y si es pues ganas el nivel
         indexForEnemies++;
         int currentCarrots = lvlCarrotCounter.GetCurrentCarrots();
-        if (currentCarrots == 0) { endScreensController.ShowLoseScreen(); }
+        if (currentCarrots == 0) 
+        { endScreensController.ShowLoseScreen(); endScreensController.LoseSaveGameState(); }
         else if (indexForEnemies == enemyGameObjectsArray.Length) 
         {
             lvlProgressBarController.AppearLevelProgressBarAndUpdate(indexForEnemies);
             yield return new WaitForSeconds(1.2f); endScreensController.ShowWinScreen();
+            endScreensController.WinSaveGameState();
         }
         else
         {
