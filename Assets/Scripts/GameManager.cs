@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public int carrotLivesPerLevel;
     public string persistentPath;
 
-    public GameLevel[] gameLevelList;
+    [HideInInspector] public GameLevel[] gameLevelList;
 
     private readonly float transitionsTime = 1f;
     //public GameObject loadingScreenGameObject;
