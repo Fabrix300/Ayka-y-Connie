@@ -14,6 +14,7 @@ public class AudioManager : MonoBehaviour
     public Sound[] songs;
     public Sound[] soundEffects;
     public Sound[] characterVoices;
+    public MusicalNote[] musicalNotes;
 
     private void Awake()
     {
@@ -48,6 +49,18 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
             s.source.playOnAwake = s.playOnAwake;
+        }
+        foreach (MusicalNote m in musicalNotes)
+        {
+            foreach (Sound s in m.musicalNotesAccordingToFigures)
+            {
+                s.source = gameObject.AddComponent<AudioSource>();
+                s.source.clip = s.clip;
+                s.source.volume = sfxVolume;
+                s.source.pitch = s.pitch;
+                s.source.loop = s.loop;
+                s.source.playOnAwake = s.playOnAwake;
+            }
         }
     }
 
@@ -138,6 +151,13 @@ public class AudioManager : MonoBehaviour
         foreach (Sound s in characterVoices)
         {
             if (s.source) s.source.volume = sfxVolume;
+        }
+        foreach (MusicalNote m in musicalNotes)
+        {
+            foreach (Sound s in m.musicalNotesAccordingToFigures)
+            {
+                if (s.source) s.source.volume = sfxVolume;
+            }
         }
     }
 
