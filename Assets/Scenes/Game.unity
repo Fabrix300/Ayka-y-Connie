@@ -497,7 +497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFirstTimePlaying: 0
-  activeLevel: 0
+  activeLevel: 2
   enemiesPerLevel: 8
   carrotLivesPerLevel: 3
   persistentPath: 
