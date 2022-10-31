@@ -5082,6 +5082,7 @@ MonoBehaviour:
   - {fileID: 710708063}
   - {fileID: 263658492}
   askedSoundButton: {fileID: 481535479}
+  musicalFigureSelectedText: {fileID: 884096928}
 --- !u!1 &829868245
 GameObject:
   m_ObjectHideFlags: 0

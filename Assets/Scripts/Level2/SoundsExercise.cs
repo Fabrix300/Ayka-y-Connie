@@ -27,12 +27,10 @@ public class SoundsExercise : MonoBehaviour
     public RectTransform playingGuide;
     public Image[] soundDurationHolders;
     public Button askedSoundButton;
+    public TMP_Text musicalFigureSelectedText;
 
     private Level2Controller levelController;
-    private readonly string[] numberValuesTexts = new string[9]
-    {
-        "Una", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve"
-    };
+    private readonly string[] musicalFiguresNames = new string[4] { "redonda", "blanca", "negra", "corchea" };
     private readonly int[] durationsOfMusicalFigures = new int[4] { 8, 4, 2, 1 };
     private AudioManager audioManager = AudioManager.instance;
     private AudioSource pickedAudioSource;
@@ -41,8 +39,6 @@ public class SoundsExercise : MonoBehaviour
 
     private void OnEnable()
     {
-        //RectTransformUtility.CalculateRelativeRectTransformBounds(transformParent, transformTarget).size.y
-        //Debug.Log(playingGuideParent.sizeDelta.x);
         levelController = FindObjectOfType<Level2Controller>();
         /*make the buttons disabled until sound is played*/
         foreach (Button b in musicalFiguresButtons) { b.interactable = false; }
@@ -72,6 +68,7 @@ public class SoundsExercise : MonoBehaviour
         checkButton.interactable = true;
         checkButtonText.color = new Color(1f, 1f, 1f, 1f);
         checkButtonText.text = "Comprobar";
+        musicalFigureSelectedText.text = "()";
     }
 
     public void PlaySound()
@@ -127,6 +124,8 @@ public class SoundsExercise : MonoBehaviour
         cBSelected.highlightedColor = musicalFigureButtonSelectedColor;
         musicalFiguresButtons[index].colors = cBSelected;
         valueSelected = durationsOfMusicalFigures[index];
+        // show name according to selected
+        musicalFigureSelectedText.text = "(una " + musicalFiguresNames[index] + ")";
     }
 
     public void CheckAnswer()
