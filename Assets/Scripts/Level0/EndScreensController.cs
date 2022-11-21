@@ -99,8 +99,11 @@ public class EndScreensController : MonoBehaviour
     public void LoseSaveGameState()
     {
         GameLevel gL = gameManager.gameLevelList[gameManager.activeLevel];
-        gL.carrotsLeft = lvlCarrotCounter.GetCurrentCarrots();
-        gL.hasBeenPlayed = true;
+        if (!gL.hasBeenPlayed)
+        {
+            gL.carrotsLeft = lvlCarrotCounter.GetCurrentCarrots();
+            gL.hasBeenPlayed = true;
+        }
         gameManager.SaveData();
     }
 
